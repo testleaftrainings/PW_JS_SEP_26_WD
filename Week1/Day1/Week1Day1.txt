@@ -1,0 +1,47 @@
+Week1.Day1 :
+
+Notes:
+------
+
+
+1. Web application :
+
+
+=> Static Application(HTML+CSS)
+=> Dynamic Application(HTML+CSS+JS)
+
+1. HTML (Hyper Test Markup Language) Tags => Define the structure of the web application.
+2. CSS(Cascading Style Sheet) => Colours in a application.
+3. JavaScript => Interactivity(Event Driven Model)=> Click action is an event driven and JS reponds.
+
+
+2. Validation
+
+2.a. Front End Validation => checks for the format of an username / email / data input
+
+=> JavaScript was used to do the front end validation
+
+
+2.b. Back End Validation => checks the record present in backend server (GitHub server)
+
+
+3. Asynchronous / Non-blocking IO try in console of the browser :
+
+console.log("Step1")
+setTimeout(()=>{console.log("Step2")},3000)
+console.log("Step3")
+
+Output:
+
+ Step1
+ Step3
+ Step2
+
+
+4. Event-Driven Programming Model
+
+Event-driven programming means the application is reactive and responds to events/actions.
+JavaScript waits for events like clicks, keypresses, or messages and executes the corresponding event handler when the event occurs.
+
+
+
