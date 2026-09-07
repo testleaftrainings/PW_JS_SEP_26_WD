@@ -1,0 +1,369 @@
+📑 Agenda for Week2 day 01 - Arrays and Functions in JavaScript
+
+ Arrays
+ Breakout
+ Function Types
+
+ Arrays
+--------
+
+An array in JavaScript is a special type of object used to store multiple values in a single variable.
+Each value (called an element) has an index, starting from 0.
+
+ex:let fruits = ['apple', 'banana', 'cherry']
+   console.log(fruits[0]); // 'apple'
+
+
+   Key Features of JavaScript Arrays
+   ----------------------------------
+
+1) Dynamic in size — you can add or remove elements anytime.
+
+2) Heterogeneous in Nature-Can store different data types together as an single array
+Ex: let mixed = [10, 'apple', true, { name: 'John' }];
+
+3) Zero-based index — first element is at index 0.
+
+4) Internally objects — JS arrays are not fixed memory blocks like in C/C++/Java.
+
+5) Provides built-in methods like push(), pop(),shift(), unshift(), slice(), splice()
+
+
+Array methods:
+--------------
+
+1. push() - Add element at end
+let arr = [1, 2];
+arr.push(3);
+
+console.log(arr); // [1,2,3]
+
+2. pop() - Remove last element
+let arr = [1, 2, 3];
+arr.pop();
+
+console.log(arr); // [1,2]
+
+3. unshift() - Add element at beginning
+let arr = [2, 3];
+arr.unshift(1);
+
+console.log(arr); // [1,2,3]
+
+4. shift() - Remove first element
+let arr = [1, 2, 3];
+arr.shift();
+
+console.log(arr); // [2,3]
+
+5. includes() - Check value exists
+let arr = [10, 20, 30];
+
+console.log(arr.includes(20)); // true
+
+6. indexOf() - Find index
+let arr = [10, 20, 30];
+
+console.log(arr.indexOf(20)); // 1
+
+7. lastIndexOf() - Find last occurrence
+let arr = [10, 20, 10];
+
+console.log(arr.lastIndexOf(10)); // 2
+
+8. join() - Convert array to string
+let arr = ["Java", "Script"];
+
+console.log(arr.join("-")); // Java-Script
+
+9. reverse() - Reverse array
+let arr = [1, 2, 3];
+
+console.log(arr.reverse()); // [3,2,1]
+
+10. sort() - Sort array
+let arr = [5, 1, 3];
+
+console.log(arr.sort()); // [1,3,5]
+
+11. slice() - Extract portion
+let arr = [10, 20, 30, 40];
+
+console.log(arr.slice(1, 3)); // [20,30]
+
+12. splice() - Add/Remove elements
+let arr = [10, 20, 30];
+
+arr.splice(1, 1);
+console.log(arr); // [10,30]
+
+13. concat() - Merge arrays
+let a = [1, 2];
+let b = [3, 4];
+
+console.log(a.concat(b)); // [1,2,3,4]
+
+14. toString() - Array to string
+let arr = [1, 2, 3];
+
+console.log(arr.toString()); // 1,2,3
+
+15. Array.isArray() - Check array
+let arr = [1, 2, 3];
+
+console.log(Array.isArray(arr)); // true
+
+Sort Method internal mechanism:
+-------------------------------
+
+let numberArray = [10, 8, 9, 7];
+numberArray.sort((a, b) => a - b);
+
+
+### 🟢 Step 1: Initial Array
+
+[10, 8, 9, 7]
+---
+
+### 🟢 Step 2: First Comparisons
+
+1. Compare **10 and 8**
+
+   * a = 10, b = 8 → `10 - 8 = 2` (positive)
+   * Swap → `[8, 10, 9, 7]`//new array -1
+
+2. Compare **10 and 9**
+
+   * a = 10, b = 9 → `10 - 9 = 1` (positive)
+   * Swap → `[8, 9, 10, 7]` //new array -2
+
+3. Compare **10 and 7**
+
+   * a = 10, b = 7 → `10 - 7 = 3` (positive)
+   * Swap → `[8, 9, 7, 10]`
+
+---
+
+### 🟢 Step 3: Next Pass
+
+1. Compare **8 and 9**
+
+   *  a = 8,b = 9 → `8 - 9 = -1` (negative)
+   * Keep order → `[8, 9, 7, 10]`
+
+2. Compare **9 and 7**
+
+   * a = 9, b = 7 → `9 - 7 = 2` (positive)
+   * Swap → `[8, 7, 9, 10]`
+
+3. Compare **9 and 10**
+
+   * a = 9, b = 10 → `9 - 10 = -1` (negative)
+   * Keep order → `[8, 7, 9, 10]`
+
+---
+
+### 🟢 Step 4: Another Pass
+
+1. Compare **8 and 7**
+
+   * a = 8, b = 7 → `8 - 7 = 1` (positive)
+   * Swap → `[7, 8, 9, 10]`
+
+Now everything is in order 
+
+---
+
+### Final Sorted Array ascending order array
+
+[7, 8, 9, 10]
+
+---
+
+Quick Recap:
+
+* `a` and `b` are just **two numbers being compared**.
+* The compare function `(a - b)` tells JavaScript whether to swap them.
+
+| Return Value   | Action by `sort()`                        |
+| -------------- | ----------------------------------------- |
+| Negative (< 0) |   Keep the current order (`a` before `b`) |
+| Positive (> 0) |   Swap (`b` before `a`)                   |
+| Zero (0)       |   No change                               |
+
+
+
+What is Set in JavaScript?
+
+A Set is a built-in object that stores only unique values (no duplicates allowed).
+
+ex:
+Remove duplicates from an array
+let numbers = [1, 2, 2, 3, 4, 4, 5];
+
+// Convert array → Set → back to array
+let uniqueNumbers = [...new Set(numbers)];
+
+console.log(uniqueNumbers);
+Output:
+[1, 2, 3, 4, 5]
+
+Classroom Activity:
+-------------------
+
+Write the JS program to print duplicates in an array.
+let num=[56,78,90,23,90,76,43,56]
+
+pseudo code
+
+for(i=0{
+   for(j=i+1{
+      index[i]===index[j]
+   })
+})
+
+
+Functions:
+---------
+
+A function in JavaScript is a reusable block of code used to perform a specific task and there by
+
+Avoid code repetition
+Improve readability
+
+syntax:
+-------
+
+function funName(){
+
+}
+funName()
+
+
+types of function:
+------------------
+
+1) Named function/ function declaration
+2) Function expression/Anonymous function
+3) Arrow function
+4) callback function
+
+
+Named Function:
+---------------
+
+A function consists of six main components:
+
+1. function keyword, 
+2. function name, 
+3. Parameters, 
+4. function body, 
+5. function call, 
+6. Arguments. 
+
+The function keyword declares the function, the name identifies it, parameters receive values, 
+the body contains the logic, the function call executes it, and arguments are the actual values 
+passed during execution.
+
+A function can accept all the datatypes as an argument.
+
+ex:
+----
+
+function add(num1, num2) {
+    console.log(num1 + num2);
+}
+
+add(10, 20);
+add()
+
+
+function → Function Keyword
+add → Function Name
+num1, num2 → Parameters
+{ console.log(num1 + num2); } → Function Body
+add(10, 20) → Function Call
+10, 20 → Arguments
+
+>> Diff between parameter and argument in a function.
+
+| Parameter                          | Argument                          |
+| ---------------------------------- | --------------------------------- |
+| Declared in function definition    | Passed during function call       |
+| Placeholder variable               | Actual value                      |
+| Receives data                      | Sends data                        |
+| Exists inside function declaration | Exists inside function invocation |
+
+Note: placeholder is an empty variable that waits for a value
+
+
+>> Diff between console.log() and return inside a function.
+
+| console.log()       | return                        |
+| ------------------- | ----------------------------- |
+| Prints output       | Sends value back              |
+| Function continues  | Function ends immediately     |
+| Cannot store result | Can store result              |
+| Used for debugging  | Used for actual program logic |
+| Returns undefined   | Returns specified value       |
+
+
+Function Expression:
+--------------------
+
+A Function Expression is a function that is assigned to a variable and can be called using that 
+variable name.
+
+let funexp= function(x,y){
+     return x+y   
+    }
+
+    funexp()
+
+
+Arrow Function
+--------------
+
+An Arrow Function is a concise way of writing a function using the => operator. It reduces code 
+length and is widely used in modern JavaScript, especially with callbacks and array methods
+
+
+ ex: 
+
+ let add=(x,y)=>(x+y)
+console.log(add(2,3)); //5
+
+
+Callback Function
+-----------------
+
+A callback function is a function that is passed as an argument to another function and is executed later by that function.
+
+Ex:
+
+function login(username, password, callback) {
+    console.log("Login Successful");
+    callback();
+}
+
+function takeScreenshot() {
+    console.log("Screenshot Captured");
+}
+
+login("admin", "admin123", takeScreenshot);  
+
+o/p:
+----
+
+Test Execution Completed
+Extent Report Generated
+
+
+
+
+
+
+
+
+
+
