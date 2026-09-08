@@ -1,0 +1,171 @@
+Session Agenda for Week2 Day2
+
+Recap                       
+callback Hell and promise        
+Introduction to Playwright    
+Browser Launch               
+Break out                   
+
+
+Callback Hell:
+--------------
+
+Callback Hell is a situation where multiple asynchronous operations are nested inside callbacks, 
+creating deeply indented code that is difficult to read, maintain, and debug. 
+
+
+function first(cb) {
+  console.log("First Function")
+  cb();
+}
+
+function second(cb) {
+  console.log("Second Function")
+  cb();
+}
+
+function third() {
+  console.log("Third Function")
+}
+
+first(() => {
+  second(() => {
+    third()
+  });
+});
+
+
+//To avoid the callback- callback hell -> Promise was introduced.
+
+Promise
+--------
+
+Promise is a JavaScript object used to handle asynchronous operations (like API calls, 
+file read, timers) and gives a result in the future
+
+//syntax 
+
+let foodAvailable = false;
+
+let promise = new Promise((resolve, reject) => {
+  if (foodAvailable) {
+    resolve("food is ready");
+  } else {
+    reject("no delivery");
+  }
+});
+
+promise
+  .then(result => console.log(result)) //handel succeeds -> reslove
+  .catch(error => console.log(error))  // handles error -> reject
+
+Promise States:
+---------------
+1. Pending   -> Initial state
+2. Fulfilled -> resolve() called
+3. Rejected  -> reject() called
+
+
+Async/Await (introduced in ES2017)
+----------------------------------
+async/await was introduced in ES2017, async function always returns a Promise and await pauses 
+execution until the Promise is resolved or rejected.
+
+let foodAvailable = false;
+
+function orderFood() {
+    return new Promise((resolve, reject) => {
+
+        if (foodAvailable) {
+            resolve("Food is ready");
+        } else {
+            reject("No delivery");
+        }
+
+    });
+}
+
+async function checkFood() {
+
+    try {
+        const result = await orderFood();
+        console.log(result);
+    } catch (error) {
+        console.log(error);
+    }
+
+}
+
+checkFood();
+
+ex:
+
+async function data(){
+
+await page.goto("url")
+await page.locator("username").fill("demomanager")
+
+}
+
+Introduction to Playwright:
+---------------------------
+
+Playwright is an open-source browser automation framework developed by Microsoft that is 
+used to automate and test modern web applications across Chromium, Firefox, and WebKit using
+ a single API.
+
+Features 
+---------
+
+Microsoft Open Source Tool
+Cross-browser automation (Chromium, Firefox, WebKit)
+Cross-platform support (Windows, Linux, macOS)
+Auto-waiting capability
+Built-in Test Runner
+Supports multiple programming languages (JavaScript, TypeScript, Java, Python, .NET)
+API Testing support
+Mobile device emulation
+Network interception and mocking
+Screenshots and video recording
+Trace Viewer for debugging
+Multiple Browser Contexts (isolated sessions)
+Headless and Headed execution
+Automatic retries for flaky tests
+
+ Browser -> Context -> Page
+ ----------------------------
+
+Browser: Actual browser engine (Chromium, Firefox, WebKit)
+
+Context: Isolated environment like an incognito session
+
+Page: A single tab within a context
+
+const browser=await chromium.launch({headless:false,channel:"msedge"})
+const context=await browser.newContext()
+const page=await context.newPage()
+
+
+Commonly used Commands :
+------------------------
+
+To create a playwright file -> filename.spec.ts
+
+To run the test file -> npx playwright test filename.spec.ts
+
+To open the test report -> npx playwright show-report
+
+Default mode - headless
+
+Priority of execution
+----------------------
+
+1. Script Level : chromium.launch({channel:"msedge",headless:false})
+
+2. Terminal Command  :npx playwright test filename.spec.ts --project=firefox
+
+3. Configuration file(playwright.config.ts) :  projects: [{
+                                                          name: 'chromium',
+                                                           use: { ...devices['Desktop Chrome'] },
+                                                         }]
+
