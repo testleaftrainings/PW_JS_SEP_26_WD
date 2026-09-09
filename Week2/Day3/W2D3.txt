@@ -1,0 +1,311 @@
+Session Agenda for Week2 Day3
+Recap                              
+Playwright config file walkthrough  
+DOM Basics
+CSS Selectors                            
+
+
+Add in Playwright config file
+------------------------------
+
+/* "Include the Node.js type definitions in this file.",process, __dirname,__filename, Buffer,
+require */
+
+/// <reference types="node" /> 
+
+Above command tells TypeScript to include Node.js type definitions from @types/node. 
+This allows TypeScript to recognize Node.js globals such as process, Buffer, and __dirname, 
+preventing compilation errors like 'Cannot find name process'
+
+Page Fixture:
+-------------
+
+The page fixture is a built-in Playwright fixture that automatically creates and provides a 
+fresh browser page for every test, ensuring test isolation and independent execution.
+
+Browser → Context → Page
+
+Example:
+test('Login', async ({ page }) => {
+   await page.goto('https://amazon.in');
+});
+
+
+Commonly used Commands :
+------------------------
+
+To create a playwright file - filename.spec.ts
+
+To run the test file - npx playwright test filename.spec.ts
+
+To open the test report - npx playwright show-report
+
+Default mode - headless
+
+
+Steps to Add Report, Screenshot, Video, and Trace in Playwright Config
+----------------------------------------------------------------------
+
+export default defineConfig({
+
+  // By default, Playwright waits for a maximum of 30 seconds (30000 ms)
+  // for each test. You can override this timeout using the 'timeout' option.
+
+  timeout: 60000,
+
+  // Generate an HTML report and open it automatically after execution
+  reporter: [['html', { open: 'always' }]],
+
+  use: {
+    //headless option controls whether the browser runs with or without a visible UI.
+    headless: false,
+
+    // Capture a screenshot for every test
+    screenshot: 'on',
+
+    // Record video for every test
+    video: 'on',
+
+    // Capture trace for every test
+    trace: 'on'
+  }
+
+});
+
+
+The Playwright Config File is the central configuration file of a Playwright project
+It defines how your tests should run, which browsers to use, timeouts, retries, reporters, 
+screenshots, videos, traces, and many other settings.
+
+testDir-> Specifies where test files are located.
+
+timeout-> Maximum time allowed for a single test.
+
+retries-> Number of times Playwright reruns a failed test
+
+workers-> Controls parallel execution.
+
+| Workers                   | fullyParallel | Spec Files | Projects                    | Workers Used       | Result                                                             |
+| ------------------------- | ------------- | ---------- | --------------------------- | ------------------ | ------------------------------------------------------------------ |
+| 1                         | false         | 1          | 1                           | 1                  | Tests run sequentially.                                            |
+| 1                         | true          | 1          | 1                           | 1                  | Tests still run sequentially because only 1 worker is available.   |
+| 1                         | true          | 2          | 1                           | 1                  | Spec files run one after another.                                  |
+| 2                         | true          | 2          | 1                           | 2                  | Two spec files can run in parallel.                                |
+| 4                         | true          | 4          | 1                           | 4                  | Four spec files can run in parallel.                               |
+| 1                         | true          | 1          | 3 (Chrome, Firefox, WebKit) | 1                  | Projects run one after another because only 1 worker is available. |
+| 3                         | true          | 1          | 3                           | 3                  | Chrome, Firefox, and WebKit can run in parallel.                   |
+| Default (workers not set) | true          | Multiple   | Multiple                    | Based on CPU cores | Playwright automatically decides the worker count.                 |
+
+
+fullyParallel->Run tests in parallel.
+
+forbidOnly->Prevents accidental commits of .only
+
+process.env->A Node.js object containing environment variables. 
+process.env.CI->Returns the value of the CI environment variable.
+
+Local Machine:
+--------------
+process.env.CI = undefined (usually)
+forbidOnly: !!process.env.CI
+forbidOnly: false, Hence test.only() is allowed in local
+
+CI Pipeline (Jenkins/GitHub Actions/Azure DevOps):
+-------------------------------------------------
+forbidOnly: !!process.env.CI
+process.env.CI = "true"  //Error: test.only is not allowed and Fails execution in Pipeline
+forbidOnly: true
+
+! (Single NOT):Opposite boolean value
+--------------------------------------
+!true  -> false
+!false -> true
+
+!! (Double NOT):Converts any value into a boolean:
+--------------------------------------------------
+
+!!undefined -> false  //hence .only is allowed in local
+!!0         -> false
+!!""        -> false
+!!"hello"   -> true
+!!1         -> true
+
+reporter-> Generates test reporter
+
+use Block-> Settings inside use apply to every test
+
+ex: use: {
+  headless: false, //headless: true(Browser runs in background.)
+  screenshot: 'on',
+  video: 'on',
+  trace: 'on'  //Useful for debugging failures.
+}
+
+projects (multiple browsers)->Controls browser choice and execution configuration.
+
+
+Playwright project structure:
+-----------------------------
+Project
+│
+├── tests
+├── playwright.config.ts
+├── package.json
+├── node_modules
+├── test-results
+├── playwright-report
+└── .gitignore
+
+tests -> Contains all test scripts/spec files.
+ex: Login.spec.ts
+
+playwright.config.ts -> Central configuration file for Playwright execution.
+ex: Browser settings
+Retries
+Timeouts
+Reporters
+Projects
+
+package.json -> Defines project dependencies.
+{
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"  //Install 1.55.0 or any compatible newer version.
+  }
+}
+
+
+package-lock.json -> Locks the exact versions of installed dependencies across all environments.
+
+
+| Feature              | `package.json`                                                 | `package-lock.json`                                                |
+| -------------------- | -------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Purpose              | Describes the project and its dependencies.                    | Locks the exact versions of installed dependencies.                |
+| Created by           | Created manually using `npm init` or by the developer.         | Automatically generated by npm after `npm install`.                |
+| Editable             | Yes. Developers edit it.                                       | No. It is automatically maintained by npm.                         |
+| Contains             | Project name, version, scripts, dependencies, devDependencies. | Exact dependency tree, including transitive (nested) dependencies. |
+| Version              | Can specify version ranges (`^`, `~`).                         | Stores the exact installed version.                                |
+| Should be committed? |  Yes                                                           |  Yes                                                               |
+
+node_modules -> Stores all installed npm packages(automatically created-npm install)
+Playwright
+TypeScript
+doten
+
+test-results -> Stores execution artifacts generated during test runs.
+ex:Screenshots
+Videos
+Traces
+Failure logs
+
+playwright-report -> Stores HTML execution reports.
+ex: npx playwright show-report
+
+.gitignore -> Prevents unwanted files/folders from being committed to Git.
+
+
+
+DOM Structure [Document object model]:
+--------------
+DOM is the browser's representation of a web page as a tree of elements that JavaScript and 
+automation tools can access and manipulate.
+
+
+<html>
+  <head>
+    <title>Testleaf Page</title>
+  </head>
+  <body>
+    <div>
+      <h1>Welcome to Testleaf</h1>
+      <p>This is a sample paragraph.</p>
+
+      <!-- Label and Textbox -->
+      <label for="username">Enter Name:</label>
+      <input type="text" id="username" name="username">
+
+    </div>
+  </body>
+</html>
+
+
+3 ways to open DOM:
+-------------------
+
+ctrl+Shift+I
+right click and say inspect
+(Browser)->Settings->more->Developer tools
+f12 or ctrl+12
+
+-------------------------------------------------------------------------------------
+
+CSS Selectors [Cascading style sheet]: 
+-------------------------------------
+CSS is used for style and design a web page
+CSS selectors are fast because browsers understand them natively and can locate elements quickly.
+
+1. By ID :
+Syntax : #idValue 
+Example : #username
+
+2. By Class :
+Syntax : .classValue
+Example : .inputLogin
+
+3. By Attribute :
+[tagName[attribute='value']]
+Example : input[id='username']
+
+4. Descendant Combinator 
+Example : form input
+
+5. Child Combinator
+Example : form > input
+
+6. Immediate Siblings
+Example: label + input
+
+7. Descendant Siblings
+Example: label ~ input
+
+-------------------------------------------------------------------------------------
+
+Attribute priority :
+-----------------------
+1️⃣ aria-label - Accessibility-based, stable, first choice
+2️⃣ id - Unique, fast
+3️⃣ name -Usually stable, not always unique
+4️⃣ class - For styling, changes often → least reliable
+
+Playwright locator methods :
+----------------------------
+
+nth(), first(), and last() are Playwright Locator API methods.
+
+They help you choose which element to act on when a locator matches multiple elements.
+
+Strict Mode Violation Error :
+-----------------------------
+When a locator matches more than one element, Playwright throws an error to prevent ambiguity.
+To fix this, use nth(), first(), or last() to specify which element you want to interact with.
+
+-------------------------------------------------------------------------------------
+Classroom Activity :
+----------------------
+
+Write a Playwright script to perform the following actions on the Salesforce login page:
+1. Navigate to the Salesforce login page.
+2. Use different CSS selector strategies (ID, Class, Attribute) to locate the username and password fields.
+3. Enter sample credentials into the username and password fields.
+4. Click the login button using a CSS selector.
+5. Verify that the login was successful by checking for a specific element on the landing page.
+
+https://login.salesforce.com/?locale=in
+Sample credentials :
+Username:dilipkumar.rajendran@testleaf.com
+Password: TestLeaf@2025
+
+---------------------------------------------------------------------------------------
+
+
+
+
