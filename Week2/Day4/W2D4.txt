@@ -1,0 +1,293 @@
+Session Agenda for Week2 Day4 : XPaths and Dropdowns
+
+Recap                               
+Xpaths
+Dropdowns                           
+Breakout                            
+
+
+
+Code to Maximize Screen size: 
+-----------------------------
+
+Use in config: Applicable to all the tests in the playwright frame work.
+
+{
+      name: 'chromium',
+      use: { 
+        browserName:"chromium", 
+        viewport:null, // disable the deafult 1280x720
+        launchOptions:{
+          args:['--start-maximized'],
+        },
+      },
+    }, 
+
+or
+
+{
+  name: 'chrome',
+  use: {
+    browserName: 'chromium',
+    channel: 'chrome',
+    viewport: null, //disable the deafult viewport 1280x720
+    launchOptions: {
+      args: ['--start-maximized'],
+    },
+  },
+  }
+
+   Use in Script: custom viewport can be configured in script.
+  --------------
+
+  test.use({
+    viewport:{width:1020, height:800}
+})
+
+
+
+Basic Xpath:
+-----------
+
+XPath (XML Path) is used to locate elements in the DOM using a path-like syntax.
+It acts like an address to identify elements when ID, name, or class is not reliable.
+
+Types of Xpath
+--------------
+
+1) Absolute xpath
+------------------
+
+Absolute XPath is an XPath that starts from the root of the HTML document and follows the
+full path to reach an element.
+
+<html>
+  <body>
+    <div>
+      <form>
+        <input type="text" id="username">
+      </form>
+    </div>
+  </body>
+</html>
+
+Absolute xpath: 
+
+/html/body/div/form/input
+
+Characteristics : 
+-----------------
+
+Starts with single slash /
+Begins from root element
+Contains the complete DOM path
+
+Disadvantages:
+-------------
+
+A small change in the webpage structure can break the locator.
+
+ex: If a new <div> is added:
+<body>
+  <div></div>
+  <div>
+
+Your XPath becomes invalid.
+
+In frameworks like Playwright and Selenium, absolute XPath is generally not recommended
+because it is brittle and hard to maintain.
+
+
+2) Relative xpath
+-----------------
+
+Relative XPath is a way to locate elements starting from anywhere in the DOM, not necessarily 
+from the root.
+
+Element is identified without using full DOM path and locator will be stable.
+
+Characteristics : 
+-----------------
+
+Starts with double slash //
+flexible, readable, and preferred over absolute XPath
+Less brittle (wont break easily if UI changes)
+Short and easy to maintain
+can use attribute and text
+
+Disadvantages
+-------------
+
+May match multiple elements (with wrong syntax)
+Slightly slower than CSS selectors (performance)
+
+> Basic relative xpath
+----------------------
+
+1) Attribute based Xpath : uses the attribute and attribute value of the WebElement in the
+DOM.
+
+Syntax:
+//tagName[@attribute='attributeValue']
+Example
+//input[@id='username']
+
+
+2) Text based Xpath: based on the text displayed for the WebElement in dom
+
+Syntax:
+//tagName[text()='text value in DOM']
+Example:
+//a[text()='Create New Account']
+
+3) Partial attribute based Xpath : uses the partial attribute value of the WebElement.
+
+Syntax:
+//tagName[contains(@attribute, 'Partial value of the attribute')]
+Example:
+//input[contains(@id,'user')]
+
+4) Partial text based Xpath: uses the partial text value of the WebElement.
+
+Syntax:
+//tagname[contains(text(),' Partial text in my DOM')]
+Example:
+//a[contains(text(),'Create')]
+
+5) Collection Based Xpath: when there is multiple matches for xpath, uses index to match 
+the exact element, index starts from 1.
+
+Syntax:
+(//tagName[@attribute='attributeValue'])[index]
+Example
+(//input[@class='inputLogin'])[2]
+
+
+Dropdowns:
+----------
+A dropdown (or select menu) is a UI element that allows the user to choose one or more options 
+from a list.
+There are two main types of dropdowns in web applications:
+
+
+1. Standard / Native Dropdown
+-----------------------------
+
+A Standard (or Native) Dropdown is a dropdown list created using the HTML <select> tag and its 
+child <option> elements.
+It is called native because it's a built-in browser control — handled directly by the browser's 
+rendering engine, not by JavaScript or CSS styling.
+
+Ex:<select id="country">
+  <option value="IN">India</option>
+  <option value="US">United States</option>
+  <option value="UK">United Kingdom</option>
+</select>
+
+how to handle using build-in methods
+------------------------------------
+
+1) await page.locator('#country').selectOption('IN');
+or
+2) await page.selectOption('#country', 'IN');
+
+Key Features:
+------------
+
+Uses native HTML elements (<select>, <option>).
+Fully supported by browsers (no JavaScript required).
+Easy to automate with Playwright's selectOption().
+Supports value, label, and index attributes.
+
+1) By value attribute:
+-------------------
+The value is the hidden attribute inside the <option> tag.
+Playwright uses this when you provide a string.
+
+await page.locator('#country').selectOption({value:'US'});
+
+this seletcs:
+<option value="US">United States</option>
+
+2)By label (visible text)
+-------------------------
+
+The label refers to the display text that users see in the dropdown.
+
+await page.locator('#country').selectOption({ label: 'United Kingdom' });
+
+this selects:
+<option value="UK">United Kingdom</option>
+
+3) By index (position in the list)
+----------------------------------
+
+The index represents the zero-based position of the option.
+
+await page.locator('#country').selectOption({ index: 0 });
+
+this selects:
+<option value="IN">India</option>
+
+priority among the 3 options
+----------------------------
+Ex:
+
+
+Value → loginBtn (value of the attribute data-testid)
+Label / Visible text → Sign In
+
+Even if text changes from Sign In to Login,
+the locator still works.
+Value comes first because it is stable, unique, and reliable.
+
+Priority1: Value
+Priority2: label/visible text
+Priority3: index
+
+why value is given first priority
+---------------------------------
+this selects:
+<option value="US">United States</option>
+
+In a standard HTML form, the <option>'s value is what actually gets sent to the server when a 
+form is submitted — not the visible text.
+
+If a user selects “United States”,
+the browser actually sends → country=US
+-----------------------------------------------------------------------------------------------------------
+
+Custom / Dynamic Dropdown 
+-------------------------
+
+Handling Custom Dropdowns with click action (Built with <div>,<li <ul>)
+
+div-division
+li->list
+ul-> unordered list
+
+Example:
+<div class="dropdown">
+  <div class="option">India</div>
+  <div class="option">USA</div>
+  <div class="option">UK</div>
+</div>
+
+//open the dropdown
+await page.locator('.dropdown').click();
+
+//select the desired option
+await page.locator('.option', { hasText: 'USA' }).click();
+
+| Dropdown Type     | HTML Tag                | Playwright Method |
+| ----------------- | ----------------------- | ----------------- |
+| Standard Dropdown | `<select>`              | `selectOption()`  |
+| Custom Dropdown   | `<div>`, `<ul>`, `<li>` | `click()`         |
+
+
+
+PW Sep'26 WD Batch
+Week 2 Feedback form
+
+https://forms.cloud.microsoft/r/bepWV0Aa8Q
+
