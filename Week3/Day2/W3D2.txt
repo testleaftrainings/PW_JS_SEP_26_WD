@@ -1,0 +1,105 @@
+Session Agenda for Week3 Day2 : Playwright Locators and codegen
+
+1. Recap                               
+2. Playwright Locators                                              
+3. codegen                        
+4. Breakout   
+                     
+
+
+Playwright Locators:
+--------------------
+Playwright locators are built-in methods to find and interact with elements on a webpage. 
+They provide a more efficient and reliable way to locate elements compared to traditional methods 
+like XPaths or CSS selectors.
+
+
+Types of Playwright Locators:
+-----------------------------
+
+1) getByRole(): Uses accessibility roles to locate elements. 
+It is based on the ARIA (Accessible Rich Internet Applications) roles and is useful for finding 
+elements that have specific roles, such as buttons, links, or form controls.
+
+Ex: await page.getByRole('button', { name: 'Login' }).click()
+
+2) getByText()
+Based on visible text of the element. 
+
+Ex: await page.getByText('Login').click()
+
+3) getByLabel()
+For input fields with label
+
+Ex: await page.getByLabel('Username').fill('admin')
+
+4)getByPlaceholder()
+For input fields with placeholder attribute
+
+Ex: await page.getByPlaceholder('Enter username').fill('admin')
+
+5) getByAltText()
+For images with alt text(alternate or equivalent text) attribute.
+ It is used to locate images based on their alt text, which is a descriptive text that provides 
+ information about the image for accessibility purposes.
+
+Ex: await page.getByAltText('Company Logo').click()
+
+6)getByTitle()
+For elements with title attribute 
+
+Ex: await page.getByTitle('Submit Button').click()
+
+7) getByTestId()
+For elements with data-testid attribute, commonly used in testing frameworks to uniquely identify 
+elements. morereliable than other locators because it is less likely to change during UI updates. 
+
+Ex: await page.getByTestId('login-button').click()
+
+codegen:
+--------
+
+Playwright feature that records browser interactions and generates Playwright test scripts 
+automatically.
+
+command: npx playwright codegen --browser=firefox
+
+Pros:
+-----
+
+Fast
+Easy
+Automatic
+Beginner-friendly
+Time-saving
+
+Cons:
+-----
+
+Unoptimized → Inefficient code.
+Fragile → Easily breaks.
+Verbose → Lengthy code with unnecessary lines.
+Unmaintainable → Difficult to modify or debug.
+Limited → Supports only a few scenarios or features
+
+>> Difference between ARIA Snapshot and Screenshot
+
+| ARIA Snapshot          | Screenshot                          |
+| ---------------------- | ----------------------------------- |
+| Checks structure       | Checks appearance                   |
+| Stored as text         | Stored as image                     |
+| Less flaky             | Can fail due to tiny visual changes |
+| Good for accessibility | Good for visual validation          |
+
+
+Activity:
+---------
+
+Classroom 1: Write the typescript code to login to Leaftaps application using Playwright locators.
+------------
+
+URL : https://leaftaps.com/opentaps/control/main
+Username: democsr2
+Password: crmsfa
+
+
