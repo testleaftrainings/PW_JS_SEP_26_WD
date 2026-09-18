@@ -1,0 +1,255 @@
+Session Agenda for Week3 Day3 : storageState and TypeScript Fundamentals
+
+1. Recap                               
+2. storageState                         
+3. Breakout                      
+4. TypeScript Basics                        
+5. Breakout   
+
+
+storageState:
+-------------
+
+Storage State is a Playwright feature used to save and restore a browser context's authentication 
+data, such as cookies and local storage, into a JSON file. This allows tests to reuse an existing
+user session, bypass the login process, and start with an authenticated session without logging in 
+again.
+
+steps:
+------
+Stores cookies and local storage data.
+Saved as a JSON file (e.g., auth.json).
+Helps reuse authenticated sessions across tests.
+Eliminates the need to perform login repeatedly.
+Improves test execution speed and stability.
+
+Browser stores.
+ ├─ Cookies -> Used to store authentication/session information shared with the server.
+ ├─ Local Storage -> Used to store persistent client-side data across browser sessions.
+ ├─ Session Storage-> Used to store temporary tab-specific data until the tab is closed.
+
+
+// Save authenticated session
+await page.context().storageState({
+  path: 'auth.json'
+});
+
+// Reuse authenticated session
+
+(with Browser instance)
+const browser = await chromium.launch(); 
+const context = await browser.newContext({ storageState: 'user.json' });
+const page = await context.newPage();
+
+or 
+(with page fixture)
+test.use({
+  storageState: 'Data/user.json'
+});
+
+Note:Storage State is valid until the stored session cookies or auth tokens expire or become invalid.
+
+
+Typescript Basics:
+ ------------------
+
+ Typescript is a superset of JavaScript that adds static typing and other features to enhance code 
+ quality and maintainability. 
+ It compiles down to plain JavaScript, making it compatible with any environment that runs JavaScript.
+
+
+| Feature              | JavaScript (JS)                                       | TypeScript (TS)                                          |
+| -------------------- | ----------------------------------------------------- | -------------------------------------------------------- |
+| **Definition**       | A scripting language used to create dynamic web pages | A superset of JavaScript developed by Microsoft          |
+| **Typing**           | Dynamically typed                                     | Statically typed (supports type checking)                |
+| **Error Detection**  | Errors appear mostly at runtime                       | Errors can be detected during compile time               |
+| **Compilation**      | Runs directly in browser                              | Must be compiled to JavaScript before running            |
+| **Code Maintenance** | Harder in large projects                              | Easier for large-scale applications                      |         
+| **Syntax**           | Simpler                                               | Slightly more structured due to types                    |
+
+
+ Installation commands
+ ---------------------
+
+// Install TypeScript globally using npm
+npm install -g typescript 
+
+
+//for Macbook.
+Sudo npm install -g typescript
+
+//to check the version of typescript installed
+tsc -v 
+or
+npx tsc -v
+
+//to install typescript locally in a project
+npm install --save-dev typescript
+
+//to initialize a TypeScript project and create a tsconfig.json file
+tsc --init 
+or 
+npx tsc --init
+
+//to compile TypeScript files to JavaScript and execute the compiled JavaScript file
+tsc filename.ts   ->compiles filename.ts to filename.js
+node filename.js   -> executes the compiled JavaScript file
+
+//to run your TypeScript file directly without compiling it to JavaScript using ts-node
+npm install -g ts-node
+
+command:
+ts-node filename.ts
+or
+npx ts-node filename.ts
+
+tsconfig.json:
+--------------
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "ignoreDeprecations": "6.0",
+    "types": ["node"] ,
+    "resolveJsonModule": true
+  }
+}
+
+
+Type Inference: TypeScript automatically assigns the datatype based on the value assigned to variable. 
+---------------
+
+Implicit inference:
+------------------
+
+Implicit type inference means TypeScript automatically understands the data type of a variable based 
+on the value assigned to it.
+
+Ex:
+let city = "Chennai";   // inferred as string
+let count = 100;        // inferred as number
+let isActive = true;    // inferred as boolean
+
+Explicit inference:
+-------------------
+explicit type inference is when you explicitly declare the data type of a variable in TypeScript.
+
+ EX: let name: string = "Gauthami";
+     let Id: number = 2567;
+
+
+Datatypes in TypeScript 
+-----------------------
+
+1. number
+2. string
+3. boolean
+4. undefined
+5. null
+6. any 
+7. unknown
+8. never
+9. tuple
+
+number: It is used to represent both integer and floating-point numbers.
+
+string: It is used to represent text data. It can be enclosed in single quotes, double quotes, or 
+backticks.
+
+boolean: It is used to represent logical values, which can be either true or false.
+
+undefined: It is a type that represents the absence of a value. A variable that has been declared
+but not assigned a 
+value is of type undefined.
+
+null: It is a type that represents the intentional absence of any object value. It is often used to
+indicate that a variable has no value assigned to it.
+
+any: It is a type that can represent any value. used when are not sure about the datatype.
+
+ex: analyze the data from an API and we are not sure about the datatype of the response.
+let data: any = fetchDataFromAPI();
+expected output: data can be of any type, such as string, number, object, etc.
+
+unknown: It is a type that can represent any value, but it is safer than any because it requires 
+type checking before using the value.
+
+ex: let square:unknown=5
+if(typeof square === "number"){
+    console.log(square*square);
+}
+//output: 25
+
+use case:
+---------
+=> Reusable Utility Functions
+
+Suppose you're building a common logger:
+
+function logData(data: unknown) {
+
+    if (typeof data === "string") {
+        console.log(data.toUpperCase());
+    }
+}
+
+If you use any, someone can pass:
+
+logData(123);
+And it crashes.
+With unknown, framework forces validation.
+
+never: In Playwright, never is used for functions that permanently stop a test when a critical 
+failure happens.
+
+It is a type that represents values that never occur. It is used for functions that throw 
+exceptions or have infinite loops.
+
+Ex:
+function stopTest(message: string): never {
+  throw new Error(message);
+}
+
+stopTest("Login failed");
+
+
+| Type    | Meaning                                        |
+| ------- | ---------------------------------------------- |
+| `void`  | Function runs and finishes but returns nothing |
+| `never` | Function never finishes                        |
+
+ex:
+
+import { test, expect } from "@playwright/test";
+
+// A function that always stops the test
+
+function stopTest(message: string): never {
+    throw new Error(message);  // Test execution stops here
+}
+
+test("Login test with never example", async ({ page }) => {
+
+    await page.goto("http://leaftaps.com/opentaps/control/main");
+
+    const title = await page.title();
+
+    if (title !== "Login") { // when the title value is false 
+        stopTest("Login page did not load correctly"); // never
+    }
+
+    // This line runs ONLY if the title is correct
+    console.log("Test continues safely...");
+});
+
+
+tuple: It is a type that represents an array with a fixed number of elements, where each element can
+have a different type.
+ex: let person: [string, number] = ["Arun", 30];
+console.log(person[0]);//Arun
+
+
