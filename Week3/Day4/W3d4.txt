@@ -1,0 +1,133 @@
+Session Agenda for Week3 Day4 : TypeScript Fundamentals
+
+1. Recap                               
+2. Function                         
+3. Type Assertion                    
+4. Object literal
+5. Type Alias(Union)                       
+6. Breakout 
+
+
+
+Typescript function:
+--------------------
+
+function add(a: number, b: number): number {   // function that takes two numbers as parameters and returns a number
+  return a + b;                                //returns the sum of a and b to function
+}
+add(5, 10); // Output: 15
+
+
+Type assertion:
+---------------
+
+Type Assertion in TypeScript is a way to tell the compiler to treat a value as a specific type when 
+the developer knows the type better than the compiler.
+
+2 ways to perform type assertion:
+
+1) using angular brackets syntax
+
+let response : any = "Record from server"
+let myResponse = <string> response
+console.log(myResponse.length);
+
+
+2) using as keyword
+
+let sCode : any = "Sucess"
+let statusLength = sCode as string
+console.log(statusLength.length);
+
+Use case:
+---------
+
+A .env file is used to store environment-specific and sensitive configuration values separately 
+from the application code.
+
+Env file
+
+
+
+Object Literal:
+---------------
+
+An object literal is a direct way of creating an object using key-value pairs enclosed within curly
+braces {}
+
+object testData
+
+let testData = {
+  username: "admin",  //key:value pair
+  password: "admin123",
+  role: "QA"
+};
+
+usage:
+------
+await page.fill("#username", testData.username);
+await page.fill("#password", testData.password);
+
+
+type Alias:
+-----------
+
+A type alias in TypeScript is a way to create a new name for an existing type. It allows you to 
+define a custom type that can be used throughout your codebase, making it easier to manage and 
+maintain complex types.
+
+type user ={
+firstname : string
+lastname : string
+mobnumber : number
+}
+
+let user1 :user ={firstname : 'sekar', lastname: 'y', mobnumber:987656778}
+let user2 :user={firstname : 'sruthi', lastname: 'r', mobnumber:807656770}
+
+
+types:
+------
+
+1. Union types
+2. Intersection types
+
+Union Types
+-----------
+
+Union Type allows a variable, parameter, or property to hold more than one type or value.
+
+type Id = string | number   
+
+let userId: Id;
+
+userId = "EMP101";   // valid
+userId = 1001;       // valid
+userId= true  //not valid
+
+console.log(userId) //1001
+
+
+
+Classroom activity
+ -----------------
+
+ 1.Create a TypeScript program to handle different payment methods using a Union Type.
+
+- Create a function that accepts only specific payment methods.
+
+- Create a type alias called PaymentMethod that allows only "UPI", "CreditCard", or "PayPal".
+
+- Write a function makePayment that takes a parameter of type PaymentMethod and prints which payment
+  method is chosen.
+
+- Call the function with "UPI" and "CreditCard" as arguments.
+
+
+PW Sep'26 WD Batch:
+-------------------
+
+Week 3 Feedback form
+
+https://forms.cloud.microsoft/r/VRLNHqTUxQ
+
