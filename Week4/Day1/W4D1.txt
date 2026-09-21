@@ -1,0 +1,152 @@
+📑 Agenda for Week 4 day 01 : Type Alias(Intersection-&), Enumeration and Alerts
+
+Recap
+Type Alias(&)
+Enum
+Breakout
+Optional Parameter(typescript functions)
+Alerts
+Breakout
+
+
+Type Intersection
+-----------------
+
+Intersection type combines multiple types into one, meaning the value must satisfy all the types 
+together.
+
+ex:
+type User = { name: string }
+
+type Contact = { phone: number }
+
+type UserContact = User & Contact
+
+let UserContactdetails:UserContact={
+name:"Anitha",
+phone: 735808765
+}
+
+console.log(UserContactdetails.phone) //735808765
+
+
+Enum/Enumeration
+-----------------
+enum is a feature in TypeScript that allows you to define a set of named constants.
+
+enum types:
+----------
+Numeric enum(default)
+String enum
+Heterogenious enum
+
+Ex:
+enum environment{
+qa
+prod
+}
+
+let env:environment=environment.qa
+console.log(env)
+
+optional parameter:
+------------------
+
+An optional parameter allows a function to accept an argument optionally; if it isn't passed, its 
+value is undefined.
+
+function greet(name: string, city?: string) {
+  console.log(`Hello ${name}`);
+}
+
+greet("Bala");            
+greet("Bala", "Chennai"); 
+
+
+Alerts /Dialogs:
+---------------
+
+Alerts are pop-up or dialog boxes that appear on the browser to get user attention or input.
+
+types
+-----
+
+a) Modal alerts(not inspectable)
+--------------------------------
+
+A modal dialog forces the user to interact with it before returning to the application.
+
+Blocks the webpage
+Prevents interaction with background content
+Requires immediate response
+
+
+1) simple-ok
+ex: alert("Login Successful")
+
+2) confirmation-ok and cancel
+ex: confirm("Are you sure?")
+
+3) prompt-ok, cancel and input textbox
+ex: prompt("Enter your name")
+
+
+b) Non modal alerts (inspectabe)
+--------------------------------
+
+A non-modal dialog does not block the application.
+
+User can continue interacting with the page
+Can stay open while working
+
+1) Sweet-dismiss
+
+ex: Need help?,  //can be ignored.
+
+
+Syntax:
+-------
+
+page.on('dialog', async dialog => { ... }) → Listen and handle.
+
+await dialog.accept([promptText]) → Accept dialog (optionally providing input for prompts).
+await dialog.dismiss() → Cancel dialog.
+
+Event Listeners
+--------------
+An event listener is a function that waits for a specific event (like click, input, alert) and 
+executes code when that event happens.
+
+Syntax: page.on(eventName, callback) or page.once(eventName, callback)
+
+------------------------------------------------------------------------------------
+
+page.once()
+---------
+
+page.once() registers an event listener that runs only the first time the event occurs, then it 
+automatically stops listening.
+
+page.once('eventName', async (event) => {
+   // handle event
+});
+
+
+page.on()
+---------
+page.on() registers an event listener that will run every time the event occurs.
+
+//Handles all the alerts in the page.
+
+page.on('eventName', async (event) => {
+   // handle event
+});
+
+
+Classroom 1: 
+
+Launch the URL: https://www.leafground.com/alert.xhtml
+Click on Prompt Dialog.
+Switch to the JavaScript prompt alert.
+Enter a value using accept("Playwright").
+ 
