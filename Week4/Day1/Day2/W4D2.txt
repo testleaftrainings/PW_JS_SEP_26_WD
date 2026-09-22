@@ -1,0 +1,117 @@
+📑 Agenda for Week 4 day 02 : Frames
+
+Recap
+Frames
+Breakout
+
+Frames:
+-------
+
+An HTML document embedded inside another document using an <iframe> tag. Playwright allows direct 
+interaction with elements inside frames.
+
+
+Frame:
+//iframe -> dom (to view frames)
+view Frame source -> right click
+
+
+Types of Frame
+---------------
+
+1. single Frame
+2. Nested Frame (Frame present inside another frame)
+
+
+ways to handle iFrame:
+------------------------
+
+1) index based - switch to frame with index 
+
+index starts from '0', main page is also considered as a frame at index 0
+ //mP->0 ,f1->1,f2->2,f3->3,f4->4  and so on
+
+ex: 
+const frames = page.frames();
+const frame1 = frames[1];
+await frame1.locator("#Click").click()
+
+
+2) FrameLocator - Locate the frame first and then perform the action
+//FrameLocator().locator().click()
+
+ex:
+await page.frameLocator("(//iframe)[1]").locator("#Click").click()
+
+3) FrameObject:
+
+Returns a Frame object by locating an iframe using its name or URL, allowing you to interact with
+the elements inside that frame.
+
+//Direct Frame Interaction
+
+await page.frame({url:'https://www.leafground.com/default.xhtml'})?.locator("#Click").click()
+
+
+// Store the Frame object in a variable and reuse it for multiple interactions
+
+const frame = page.frame({ url: 'https://www.leafground.com/default.xhtml'});
+await frame?.locator("#Click").click()
+
+Optional chaining (?.) allows safe access to properties or methods by returning undefined instead of
+throwing an error when the object is null or undefined.
+
+?. => optional chaining (checks if value exists - not null/undefined)
+   if (frame) {
+      await frame.locator("#Click").click()
+   } 
+
+methods()
+---------
+
+page.frames()-> frames() method helps to get the collection of frames that is present in a webpage.
+
+page.frame({ name | url }) → Gets the frame object to interact with webelement.
+
+page.frameLocator(selector) → Locates elements inside a frame (recommended).
+
+
+>> Difference between FrameObject and frameLocator
+
+| FrameObject                                     | FrameLocator                                 |
+| ----------------------------------------------- | ---------------------------------------------|
+| Represents the iframe itself.                   | Helps locate elements inside an iframe.      |
+| Get it using `page.frame()`.                    | Get it using `page.frameLocator()`.          |
+| You first get the frame, then locate elements.  | You directly locate elements inside the frame|
+| Less preferred for UI automation.               | Recommended by Playwright for UI automation. |
+| No built-in auto-wait for element interactions. | Automatically waits for the frame and element|
+
+
+>> Difference between optional chaining and optional parameter
+
+| Optional Chaining (`?.`)                   | Optional Parameter (`?`)                      |
+| ------------------------------------------ | --------------------------------------------- |
+| Used while accessing data                  | Used while defining function parameters       |
+| Prevents runtime errors                    | Makes a parameter optional                    |
+| Returns `undefined` if value doesn't exist | Function can be called without that parameter |
+| Used with objects                          | Used with functions                           |
+
+| Operator | Name               | Purpose                      | Behaviour                  |
+| -------- | ------------------ | ---------------------------- | -------------------------- |
+| `?.`     | Optional Chaining  | Safely access object         | Handles null/undefined     |
+| `!.`     | Non-null Assertion | Tell TypeScript value exists | Removes TypeScript warning |
+
+
+
+Home Assignment:
+
+Launch the browser
+Navigate to the URL- https://www.w3schools.com/js/tryit.asp?filename=tryjs_confirm
+Switch to the iFrame containing the "Try it" button
+Ensure the webpage elements are fully loaded (Playwright auto-waits)
+Click the "Try It" button inside the frame
+Handle the Confirm Alert by clicking either "OK" or "Cancel"
+Verify that the appropriate message is displayed on the webpage "You pressed OK!"
+
+
+
