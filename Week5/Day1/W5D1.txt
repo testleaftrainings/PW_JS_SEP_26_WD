@@ -1,0 +1,231 @@
+📑 Agenda for Week5 day 1- Data Parameterization
+
+Data Parameterization
+Reading data from JSON file
+Breakout (JSON practice)
+Reading data from CSV file
+Breakout (CSV practice)
+
+
+Data Parameterization: 
+---------------------
+
+Feeding test data from external files instead of hardcoding values.
+Useful for **data-driven testing**
+
+Features:
+---------
+
+Avoid hard-coded test data
+→ Test data is externalized, making tests flexible and reusable.
+
+Test multiple scenarios using a single test
+→ Same test logic can be executed with different data sets.
+
+Improve test coverage
+→ More inputs can be validated without writing new test cases.
+
+Reduce duplicate test cases
+→ One parameterized test replaces many similar tests.
+
+Improve maintainability
+→ Changes in data do not require code changes in test logic.
+
+
+ways of implementation
+----------------------
+
+1)JSON :Reading and processing JSON files for dynamic test data.
+2)CSV :Handling .csv files for bulk data-driven tests.
+3)ENV :Utilizing .env files for environment-specific data.
+
+JSON (JavaScript object notation):
+----------------------------------
+
+It is a lightweight data format used for storing and exchanging data
+Structure is a key value pair (like objects)
+
+ex: used for API testing 
+
+syntax: 
+-------
+Ex:
+Leaf.Json
+
+{
+    "TestCaseID":"Tc001",
+    "Username":"demosalesmanager",
+    "Password": "crmsfa"
+}
+
+steps to read data from Json file:
+----------------------------------
+
+Step 1:
+Create a .json file under Data folder
+Step 2:
+Create a .spec.ts and import data from json file similar to the sample script.
+Step 3:
+Use the imported data in your test cases for validation.    
+Step 4:
+Run the test to see data-driven testing in action. 
+
+
+Classroom1:
+https://login.salesforce.com
+
+testID
+dilipkumar.rajendran@testleaf.com
+TestLeaf@2025
+
+gauthami.vn@testleaf.com
+Qeagle@123
+
+steps:
+-> create folder as utils -> create json file 
+-> pass values in json file
+-> Create Test 
+
+CSV (Comma separated value):
+----------------------------
+
+Reading test data from CSV files and running tests with multiple data sets.
+CSV is widely used in organizations for bulk test data.
+
+Syntax:
+-------
+EX:
+testData.csv
+
+tcid,username,password
+1,demoSalesManager,crmsfa
+2,demoCSR,crmsfa
+
+steps to read data from CSV file:
+----------------------------------
+
+Step 1:
+Install csv : command  npm install csv-parse.
+
+Step 2:
+Create a .csv file under Data folder.
+
+Step 3:
+Create a .spec.ts and import data from csv file similar to the sample script.
+
+Step 3:
+Use the imported data in your test cases for validation.  
+
+Step 4:
+Run the test to see data-driven testing in action.
+
+
+Installation commands:
+----------------------
+command to install csv-parse:
+npm install csv-parse
+
+command to install fs:
+npm install fs
+
+command to install path:
+npm install path
+
+syntax to read file synchronously and parse it to Json format
+---------------------------------------------------
+
+let data:any[]=parse(fs.readFileSync(path.join(__dirname,"folder path")),{columns:true, skip_empty_lines:true})
+
+/* path.join(__dirname, ...) → absolute path 
+fs.readFileSync() → reads file synchronously
+parse/sync → converts csv to Javascript objects
+Now for...of works  
+
+1. let value:any[]
+
+value → variable name
+any[] → array of any type (TypeScript)
+Means: value will store array of objects
+
+2. parse(...)
+
+Function from csv-parse
+Converts CSV → JavaScript data
+
+csv-parse()
+
+Buffer  ─────► converts internally ► String ► Parse
+
+String ───────────────────────────► Parse
+
+3. fs.readFileSync(...)
+
+Reads CSV file
+Returns file content (buffer/string)
+
+readFileSync()
+      │
+      ├── without utf-8 → Buffer
+      │
+      └── with utf-8 → String
+
+4. UTF-8 (Unicode Transformation Format-8 bit)
+
+Its a character encoding standard that converts text to bytes while writing and bytes 
+back to text while reading. In Playwright, we use UTF-8 when reading text files like CSV, JSON, 
+or TXT so that fs.readFileSync() returns a string instead of a Buffer.
+
+UTF-8 (Most common; default for web, Node.js, Playwright)
+
+5. path.join(__dirname,"../../../data/lf.csv")
+
+Builds absolute path
+__dirname → current file location
+../../../ → go up 3 folders
+Points to data/lf.csv
+
+6. { columns: true }
+
+Converts CSV rows into object format
+Uses header as keys
+
+CSV file is read synchronously using fs, parsed into JavaScript objects using csv-parse, and the 
+file path is constructed using path.join with __dirname to form an absolute path.
+
+CSV file → readFileSync → parse → array of objects → stored in value
+
+>> Difference between JSON and CSV
+
+| JSON                       | CSV                          |
+| -------------------------- | ---------------------------- |
+| Structured data            | Tabular data                 |
+| Supports nested objects    | Mainly rows and columns      |
+| Good for complex test data | Good for large tabular data  |
+| Developer-friendly         | Excel/business-user friendly |
+| Easy to access properties  | Requires parsing             |
+| Supports arrays/objects    | Simple rows/columns          |
+
+Classroom Activity 2:
+
+Application URL:
+https://leaftaps.com/opentaps/control/main
+
+CSV Test Data:
+
+tcid,username,password
+tc001,demosalesmanager,crmsfa
+tc002,democsr,crmsfa
+
+Steps:
+Create a folder as utils.
+Create a CSV file inside the utils folder.
+Add the URL, username and password in the CSV file.
+Create a Playwright test.
+Read the data from the CSV file.
+Convert the CSV data into an object.
+Launch the Leaftaps application using the URL from the CSV file.
+Enter the username and password from the CSV file.
+Click the Login button.
+Validate the login.
+
+
