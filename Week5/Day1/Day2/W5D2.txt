@@ -1,0 +1,97 @@
+📑Agenda for Week5 day 2-Data Parameterization (Env) and Hooks (Pre-conditions and Post-conditions)
+
+Reading data from Env file
+Breakout
+Hooks(Pre/Post conditions)
+
+Data Parameterization with Env file
+-----------------------------------
+
+A .env file (short for environment file) is a simple text file used to store environment 
+variables in the form of key-value pairs.
+
+It is commonly used in projects to separate configuration data (like URLs, API keys, database 
+credentials, secrets) from the actual application code.
+
+Syntax:
+-------
+Sample ENV (config.env)
+
+APP_URL=https://example.com
+USERNAME=demoUser
+PASSWORD=securePass123
+
+Step 1:
+Install dotenv command: npm install dotenv 
+
+Step 2:
+Create a .env file under Data folder.
+
+Step 3:
+Create a .spec.ts and import data from env file to test script. 
+
+Step 4:
+Use the imported data in your test cases for validation.
+
+Step 5:
+Run the test to see data-driven testing in action.
+
+To set the environment in terminal:
+-----------------------------------
+
+(Windows vs macOS)
+
+Action	     Windows (PowerShell)	      macOS / Linux
+Set env	      $env:envFile="Qa"	           export envFile=Qa
+Check env	   $env:envFile	               echo $envFile
+Unset env	  $env:envFile=""	           unset envFile
+
+
+Classroom Activity: Data Parameterization Using .env
+
+URL: https://login.salesforce.com
+
+Credentials
+-----------
+
+Username: dilipkumar.rajendran@testleaf.com
+Password: TestLeaf@2025
+
+Username: gauthami.vn@testleaf.com
+Password: Qeagle@123
+
+Instructions
+------------
+
+Create the folder utils/data.
+Create a .env file inside the utils/data folder.
+Store the application URL, username, and password in the .env file.
+Create a Playwright test that reads the values from the .env file and logs in to the Salesforce application.
+---------------------------------------------------------------------------------------------------------
+
+Test Annotation(Hooks)
+----------------------
+Hooks are special methods in Playwright that execute before or after test execution to handle 
+setup and cleanup activities, thereby controlling the execution flow.
+
+Types of Hooks:
+---------------
+
+1) test.beforeAll
+→ Executes once before all tests in a file
+  Used for global setup (ex: data connectivity or test data setup)
+
+2) test.beforeEach
+→ Executes before every test
+  Used for common pre-conditions (ex: login and navigation)
+
+3) test modules
+
+4) test.afterEach
+→ Executes after every test
+  Used for cleanup (ex: logout, clearing data, screenshots on failure)
+
+5) test.afterAll
+→ Executes once after all tests
+  Used for global cleanup (ex: closing connections, removing test data)
+
