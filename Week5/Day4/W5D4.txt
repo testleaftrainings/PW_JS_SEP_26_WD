@@ -1,0 +1,100 @@
+📑 Agenda for Week 5 day 04: Access Modifiers[Encapsulation] and Inheritance
+
+Recap
+Access Modifiers
+Breakout
+Inheritance
+
+Access Modifiers:
+-----------------
+
+Access Modifiers control visibility of properties and methods in a class.
+
+1. Public (default): Accessible everywhere
+
+Ex: public name:string = "Sindhu"
+
+2. Private: Accessible only inside same class, access to the property from outside the class can be
+ controlled through get and set methods.
+
+EX: private salary:number = 50000;
+
+3. Protected: Accessible inside the class and inherited child class through extends keyword.
+
+Ex: 
+class Parent {
+  protected age:number = 25;
+}
+
+class Child extends Parent {
+  show() {
+    console.log(this.age);//read data before modification
+    this.age=30 // modify the data
+     console.log(this.age) //read data after modification
+  }
+}
+
+4. readonly : constant/final --> cannot change the assigned value
+
+Ex: public readonly esalary = 20000//avail everywhere but readonly
+
+5. static: belongs to the class and not to the object --> can be accessed without creating the 
+object of the class.
+
+Ex: private static email = "www.gmail.com" //explicit access modifier
+    static email = "www.gmail.com"  //default public
+
+//can be accessed using classname
+console.log(classname.email)
+
+Note: 1. Always use explicit modifiers that makes code more readable and maintainable
+      2. Static members are not inherited, but they are accessible in the child class using the 
+      parent or child Class name, not through object or this keyword.
+
+
+
+Q] When do we use static in a TypeScript framework?
+
+We use static when the data or behavior is:
+
+Common for the entire framework
+Does NOT depend on object state
+Utility / helper / configuration
+Shared across tests, pages, or services
+
+Static for Constants & Configuration
+Use case:
+
+URLs
+Timeouts
+
+class Config {
+  static BASE_URL = "https://leaftaps.com";
+  static TIMEOUT = 5000;
+}
+
+ex:
+Usage (no object needed)
+await page.goto(Config.BASE_URL);
+
+
+Single source of truth
+Easy to maintain
+
+
+Classroom Activity:
+------------------
+
+Create method add() as public, sub() as private, mul() as protected and try to access it outside
+the class.
+
+
+
+
+
+Week5 : 
+
+Feedback form:
+
+https://forms.cloud.microsoft/r/ZinhJ2xK8j
+
