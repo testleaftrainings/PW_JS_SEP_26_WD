@@ -1,0 +1,293 @@
+📑 Agenda for Week 6 day 01: Inheritance and Polymorphism
+
+Recap
+Inheritance
+Breakout
+Polymorphism
+Breakout
+Abstraction
+
+Inheritance:
+------------
+
+Inheritance is the process where a child class acquires properties and methods from a parent class
+for code reusability.
+
+extend is the keyword used to inherit the class properties and methods.
+
+Features:
+---------
+
+Code Reusability
+Avoids code duplication
+Easy maintenance
+Supports method overriding
+Helps achieve runtime polymorphism
+
+1. Single Inheritance :
+When one child class inherits from one parent class
+
+Parent
+  ↓
+Child
+
+EX:
+class Parent {}
+
+class Child extends Parent {}
+
+
+2. Multilevel Inheritance :
+When a class inherits from a class that already inherits from another class.
+
+Grandparent
+     ↓
+   Parent
+     ↓
+   Child
+
+ex:
+class Grandparent {}
+
+class Parent extends Grandparent {}
+
+class Child extends Parent {}
+
+
+3. Hierarchical inheritance 
+ When multiple child classes inherit from the same parent class.
+
+       Parent
+       /    \
+   Child1  Child2
+
+ex:
+class Parent {}
+
+class Child1 extends Parent {}
+
+class Child2 extends Parent {}
+ 
+
+4. Hybrid Inheritance
+A combination of two or more types of inheritance, such as multilevel + hierarchical inheritance.
+
+       Grandparent
+            ↓
+          Parent
+          /    \
+      Child1  Child2
+
+Here, multilevel + hierarchical inheritance is combined.
+
+
+5.Multiple Inheritance
+When a single child class inherits from more than one parent class.
+
+Parent1 ──┐
+          ↓
+        Child
+          ↑
+Parent2 ──┘
+
+TypeScript does not support multiple inheritance using classes:
+
+ex: 
+
+class Parent1 {}
+class Parent2 {}
+
+// Not allowed
+class Child extends Parent1, Parent2 {}
+
+However, TypeScript can achieve similar behavior using interfaces:
+
+interface Parent1 {
+    method1(): void;
+}
+
+interface Parent2 {
+    method2(): void;
+}
+
+class Child implements Parent1, Parent2 {
+
+    method1() {
+        console.log("Parent 1");
+    }
+
+    method2() {
+        console.log("Parent 2");
+    }
+}
+
+ClassRoom Activity 1 :
+---------------------
+
+Parent file
+Create class Browser
+Create 2 methods browserType(),browserVersion()
+
+1st Child file
+Create class Chrome 
+Create 1 method launchBrowser
+Create object for Chrome
+
+2nd Child file
+Create class Edge
+Create 1 method launchBrowser
+Create object for Edge
+
+
+Polymorphism: Polymorphism is the ability of a method to have different behaviors based on the 
+context or class.
+
+polymorphism->many+forms
+
+types:
+------
+
+1) Method overloading(compile time polymorphism)
+2) Method overriding(runtime polymorphism)
+
+
+Method overloading:
+------------------
+
+Method Overloading means having multiple methods with the same name but different parameters 
+(type, number, or order).
+It allows the same method name to perform different actions based on the input.
+
+TypeScript supports method overloading only at the type level (signatures), not true runtime 
+overloading like Java.
+You can declare multiple method signatures, But only one actual implementation is allowed
+
+
+class Calculator {
+  add(a: number, b: number): number;  //signature
+  add(a: string, b: string): string;  //signature
+
+  // single implementation-1
+  add(a: any, b: any): any {
+    return a + b;
+  }
+}
+
+or
+
+//single implementation-2
+add(a: number | string, b: number | string): number | string {
+
+if (typeof a === "number" && typeof b === "number") {
+return a + b;
+ } else {
+  return a.toString() + b.toString();
+ }
+ }
+
+const c = new Calculator();
+console.log(c.add(5, 10));       // 15
+console.log(c.add("Hi ", "All"))// Hi All
+
+
+
+Method overriding:
+------------------
+Method overriding is achieved using inheritance, where a child class provides its own implementation
+for a method with the same name and parameters as defined in the parent class.
+
+//Different browsers behave differently
+
+class Browser {
+    launch() {
+        console.log("Launching browser");
+    }
+}
+
+class Chrome extends Browser {
+    launch() {
+        console.log("Launching Chrome browser");
+    }
+}
+
+class Edge extends Browser {
+    launch() {
+        console.log("Launching Edge browser");
+    }
+}
+
+let ch=new Chrome()
+ch.launch()
+
+
+Classroom 2: Method overloading and Method overriding
+
+Overloading
+Create a class TextBox and implement method overloading for fill() with the following signatures:
+
+fill(text: string)
+fill(text: string, locator: string)
+Ensure a single implementation handles both cases appropriately.
+
+Overriding
+Create a parent class Browser with a method browserVersion().
+Create a child class Chrome that overrides browserVersion() and prints a specific browser version.
+
+
+Abstraction:
+------------
+
+Abstraction means hiding implementation details and showing only essential functionality
+
+Reduce complexity
+Improves maintainability
+
+Ex: we use click and fill methods in the Automation Script
+  Abstraction is achieved by hiding locators and low-level implementation inside classes
+  (abstract/base classes) and exposing only business-level methods like login(), search().
+
+
+
+Abstraction-> contains interface, abstract class, concrete/normal class
+
+Interface -> fully abstract method -> we cannot have implemented methods
+interface can only extend another interface
+
+abstract class -> partial implementation-> contains both implemented and unimplemented methods
+0 to 100% abstract method
+we cannot create object for the abstract class
+we use abstract keyword followed by abstract class and abstract methods
+abstract class can extend another abstrace class
+abstract class can implement interface
+ 
+ EX:
+
+abstract class BasePage {
+    abstract login(user: string, pass: string): void;
+}
+
+class LoginPage extends BasePage {
+
+    login(user: string, pass: string): void {
+        console.log("Fill username");
+        console.log("Fill password");
+        console.log("Click login");
+    }
+}
+
+let page = new LoginPage();
+page.login("admin", "123");
+
+
+
+Classroom Activity 3:
+
+create abstract class 
+fill() -> implement
+clear()->implement
+locator()-> unimplement
+frame() -> unimplement
+
+create another concrete class 
+-> implement methods
+-> create object and call the methods
