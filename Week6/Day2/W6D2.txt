@@ -1,0 +1,87 @@
+📑 Agenda for Week6 Day2 - Interface and Introduction to POM
+
+Recap
+Interface
+Breakout
+Intorduction to POM
+Creating LoginPage using constructor
+
+
+Interface:
+----------
+
+Interface is a contract that defines the structure of methods and properties, and its implementation
+is provided by the class that implements it.
+
+Ex: interface Login {
+    login(): void;
+}
+
+class User implements Login {
+    login() {
+        console.log("Login successful");
+    }
+}
+
+let obj = new User();
+obj.login();
+
+>> Difference between Abstract and Interface:
+
+
+| Feature         | Abstract Class                           | Interface                               |
+| --------------- | ---------------------------------------- | --------------------------------------- |
+| Purpose         | Partial abstraction                      | Full abstraction                        |
+| Methods         | Can have implemented + abstract methods  | Only method declarations                |
+| Properties      | Can have variables with values           | Only declarations (no values)           |
+| Inheritance     | Class can extend only one abstract class | Class can implement multiple interfaces |
+| Keywords        | `extends`                                | `implements`                            |
+| Object Creation | Cannot create object                     | Cannot create object                    |
+| Use Case        | When common logic is needed              | When only rules/structure needed        |
+
+
+Classroom 3:
+
+Create an interface Payment with payment method
+pay(amount: number): void
+create 3 classes with UPI,CreditCard and NetBanking
+each class should implement payment method and provide its own implementation
+
+POM(Page Object Model):
+-----------------------
+
+It is a design pattern for organizing the code in test automation.
+
+It helps to separate UI locators and interactions into dedicated page classes, instead of writing 
+everything inside test scripts.
+
+Each web page (or module) in the application is represented by a separate class and that class 
+contains locators and methods that act on that page.
+
+
+ex: 
+
+multi-level inheritance:
+
+Loginpage --> WelcomePage --> HomePage --> LeadPage --> CreateLeadPage --> VerifyLead
+                                      ---> AccountPage --> CreateAccountPage -->VerifyAccount
+
+
+Hierarchical inheritance:
+
+                    pwwrapper(Parent class)
+  |                  |        |           |          |                |
+Loginpage     WelcomePage   HomePage   LeadPage  CreateLeadPage  VerifyLead  (individual child classes)
+
+Features:
+---------
+
+Reusability - write once, use everywhere
+Maintainability - if UI changes, update in one place
+Readability - test scripts become clean and easy to understand
+Scalability - works well for large projects
+
+
+Page Object → UI implementation
+Test        → Test scenario & validation
+
