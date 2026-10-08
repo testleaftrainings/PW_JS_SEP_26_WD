@@ -1,0 +1,361 @@
+📑 Agenda for Week 6 Day 4 – Wrapper Methods & Custom Fixture
+
+1. Wrapper Methods
+- Abstract Wrapper Class
+- Reusable Playwright methods
+- Centralizing common actions
+
+2. Data Parameterization
+- Read URL from .env
+- Read login credentials from JSON
+- Parameterize test data
+
+3. Faker Library
+- Dynamic test data generation
+- Using Faker in Playwright tests
+
+4. Custom Fixture
+- Creating custom fixtures
+- Reusing Page Objects
+- Avoiding repeated object creation
+
+Wrapper Method: 
+---------------
+
+A wrapper method is a method that encapsulates an existing method or multiple operations and may 
+add additional logic, making the functionality reusable and easier to maintain.
+
+Example:
+
+Suppose you repeatedly use:
+
+await page.getByRole("button", { name: "Login" }).click();
+
+
+
+We can create a wrapper method:
+
+async function clickLogin(page: Page) {
+    console.log("Clicking Login button");
+    await page.getByRole("button", { name: "Login" }).click();
+}
+
+
+
+Now we can simply use:
+await clickLogin(page);
+
+Benefits:
+
+- Reusability
+- Maintainability
+- Reduces duplicate code
+- Centralizes common actions
+- Easier to update locators
+
+
+Abstract Wrapper Class:
+-----------------------
+
+Instead of creating individual wrapper functions, we can create an abstract wrapper class 
+containing reusable Playwright methods.
+
+Example:
+import { Page, Locator } from "@playwright/test";
+
+export abstract class PWWrapper {
+
+    constructor(protected page: Page) {}
+
+    async click(locator: Locator) {
+        await locator.click();
+    }
+
+    async fill(locator: Locator, data: string) {
+        await locator.fill(data);
+    }
+
+    async getText(locator: Locator) {
+        return await locator.innerText();
+    }
+}
+
+A Page Object can extend this wrapper:
+
+export class LoginPage extends PWWrapper {
+
+    private username = this.page.getByLabel("Username");
+    private password = this.page.getByLabel("Password");
+    private loginButton = this.page.getByRole("button", { name: "Login" });
+
+    async login(user: string, pwd: string) {
+        await this.fill(this.username, user);
+        await this.fill(this.password, pwd);
+        await this.click(this.loginButton);
+    }
+}
+
+Flow:
+-----
+
+Page Object
+     ↓
+extends
+     ↓
+Abstract Wrapper Class
+     ↓
+Reusable Methods
+     ↓
+click()
+fill()
+getText()
+
+
+
+Data Parameterization:
+----------------------
+
+Data parameterization means providing test data from external sources instead of hard-coding the 
+data directly inside the test.
+
+Examples:
+.env
+JSON
+CSV
+Excel
+Test Data Files
+
+Read URL from .env file:
+------------------------
+
+Installation:
+npm install dotenv
+
+Import:
+import dotenv from "dotenv";
+
+dotenv.config()
+
+.env
+BASE_URL=https://example.com
+
+Usage
+await page.goto(process.env.BASE_URL!);
+
+Benefit:
+--------
+
+Instead of changing the URL inside every test, we can change it in the .env file.
+For example:
+DEV  → https://dev.example.com
+QA   → https://qa.example.com
+UAT  → https://uat.example.com
+
+Read Login Data from JSON:
+--------------------------
+
+Example:
+test-data/login.json
+{
+    "username": "demoUser",
+    "password": "demoPassword"
+}
+
+Read the JSON file:
+import loginData from "../test-data/login.json";
+
+Use it:
+await loginPage.login(
+    loginData.username,
+    loginData.password
+);
+
+Benefit:
+--------
+
+The test logic and test data are separated.
+
+Test Script
+     ↓
+Test Data
+     ↓
+JSON
+
+
+Faker Library:
+--------------
+
+Faker is a test-data generation library used to create realistic and dynamic test data instead of
+hard-coding test values.
+
+Installation:
+npm install @faker-js/faker
+
+Import:
+import { faker } from "@faker-js/faker";
+
+Examples
+faker.person.firstName()
+
+faker.person.lastName()
+
+faker.company.name()
+
+faker.company.buzzNoun()
+
+faker.internet.email()
+
+faker.phone.number()
+
+faker.location.city()
+
+faker.location.country()
+
+Example:
+const firstName = faker.person.firstName();
+const lastName = faker.person.lastName();
+const email = faker.internet.email();
+
+console.log(firstName);
+console.log(lastName);
+console.log(email);
+
+Why Faker?
+Instead of:
+const firstName = "Sindhu";
+
+We can generate:
+const firstName = faker.person.firstName();
+
+Every execution can generate different test data.
+
+
+Custom Fixture:
+---------------
+
+A custom fixture is a user-defined fixture that extends Playwright's built-in fixtures such as page,
+browser, and context to provide custom setup, data, objects, or functionality.
+
+
+Custom Fixture = Reusable setup or functionality created on top of Playwright's built-in fixtures.
+
+Example:
+--------
+
+//customFixture.ts
+
+import { test as base } from "@playwright/test";
+import { LoginPage } from "../pages/LoginPage";
+
+export const test = base.extend<{
+    loginPage: LoginPage;
+}>({
+    loginPage: async ({ page }, use) => {
+        const loginPage = new LoginPage(page);
+
+        await use(loginPage);
+    }
+});
+
+Now we can use the custom fixture directly in the test.
+
+Test
+import { test } from "./customFixture";
+
+test("Login test", async ({ loginPage }) => {
+
+    await loginPage.login(
+        "user",
+        "password"
+    );
+
+});
+
+Instead of creating the object manually in every test:
+const loginPage = new LoginPage(page);
+
+the fixture provides it:
+async ({ loginPage }) => {
+
+Flow
+Playwright Built-in Fixture
+          ↓
+         page
+          ↓
+    Custom Fixture
+          ↓
+      LoginPage
+          ↓
+      loginPage
+          ↓
+         Test
+
+Why Custom Fixture?
+
+Without Custom Fixture:
+-----------------------
+
+test("Test 1", async ({ page }) => {
+
+    const loginPage = new LoginPage(page);
+
+});
+
+test("Test 2", async ({ page }) => {
+
+    const loginPage = new LoginPage(page);
+
+});
+
+
+
+With Custom Fixture:
+--------------------
+
+test("Test 1", async ({ loginPage }) => {
+    await loginPage.login();
+});
+
+test("Test 2", async ({ loginPage }) => {
+    await loginPage.login();
+});
+
+
+Key Benefits:
+-------------
+
+- Reusable Page Objects
+- Reduces repetitive object creation in test files
+- Centralizes test setup
+- Cleaner test scripts
+- Better maintainability
+- Works well with POM
+
+Note:
+I would not say that custom fixtures completely avoid object creation. The LoginPage object is 
+still created by the fixture:
+const loginPage = new LoginPage(page);
+
+The advantage is that the test files don't need to repeatedly create the Page Object themselves. 
+Playwright's fixture mechanism manages that setup and provides the object to the test.
+
+POM
+ ↓
+Abstract Wrapper Class
+ ↓
+Reusable Wrapper Methods
+ ↓
+Environment / JSON Data Parameterization
+ ↓
+Faker – Dynamic Data
+ ↓
+Custom Fixture
+ ↓
+Clean & Maintainable Playwright Tests
+
+
+
+Feedback form:Week 6
+
+https://forms.cloud.microsoft/r/j0fdcdz8D4
+
