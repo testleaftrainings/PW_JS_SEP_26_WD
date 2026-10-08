@@ -1,0 +1,105 @@
+📑 Agenda for Week6 Day3 - POM
+
+Build POM for the module(end-to-end page structure)
+Breakout
+
+POM(Page Object Model):
+
+It is a design pattern for organizing the code in test automation.
+
+It helps to separate UI locators and interactions into dedicated page classes, instead of writing 
+everything inside test scripts.
+
+Each web page (or module) in the application is represented by a separate class and that class 
+contains locators and methods that act on that page.
+
+
+ex: 
+
+multi-level inheritance:
+
+Loginpage --> WelcomePage --> HomePage --> LeadPage --> CreateLeadPage --> VerifyLead
+                                      ---> AccountPage --> CreateAccountPage -->VerifyAccount
+
+
+
+LeafTaps POM design and folder structure:
+│
+├── pages/
+│   ├── LoginPage.ts
+│   ├── WelcomePage.ts
+│   ├── HomePage.ts
+│   ├── LeadPage.ts
+│   ├── CreateLeadPage.ts
+│   └── ViewLeadPage.ts
+│
+├── tests/
+│   └── LeadCreation.spec.ts
+│
+├── playwright.config.ts
+├── tsconfig.json
+├── package.json
+└── package-lock.json
+
+
+Steps to create POM:
+---------------------
+
+1) Create new workspace 
+2) Install Playwright using command "npm init playwright@latest" from the root directory
+3) Create folder "pages" under root directory for reusable .ts pages 
+4) Create the spec.file under tests to import all the pages and execute the module
+5) Create the tsconfig.json under root directory with below commands
+
+//tsconfig.json
+
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "ignoreDeprecations": "6.0",
+    "types": ["node"] ,
+    "resolveJsonModule": true
+  }
+}
+
+
+
+Classroom Activity:
+-------------------
+
+Create Account Module Using POM
+
+Objective:
+
+Implement the Create Account module using the Page Object Model (POM) design pattern in Playwright 
+with TypeScript.
+
+Task:
+
+Create a dedicated Page Object class for the Create Account page.
+Identify and define the required locators.
+Create reusable methods for each user action.
+Create a test case that uses the Page Object methods.
+Add appropriate assertions to verify the account creation flow.
+
+
+Expected Structure:
+
+pages/
+ └── CreateAccountPage.ts
+
+tests/
+ └── createAccount.spec.ts
+
+
+Expected Outcome:
+
+The test should successfully perform the Create Account flow using POM and verify the expected
+result using Playwright assertions.
+
+
