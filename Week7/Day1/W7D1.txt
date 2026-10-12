@@ -1,0 +1,228 @@
+📑 Agenda for Week7 Day1 - MCP Server
+
+MCP
+Breakout
+
+
+
+Model context protcol(MCP) with agents[planner,generator and healer]
+--------------------------------------------------------------------
+
+MCP is a standardized protocol that enables AI models 
+like Claude or ChatGPT to communicate with external tools, applications, and services.
+
+MCP acts as a bridge between the AI model and tools such as Playwright, 
+filesystem, databases, GitHub, APIs, etc., allowing the AI to perform real actions 
+instead of only generating text responses.
+
+In AI automation workflows, MCP servers expose tools/functions that AI agents can use.
+
+Example:
+AI → MCP → Playwright MCP Server → Browser Automation
+
+Advantages:
+-----------
+
+1. Real Tool Integration
+
+MCP allows AI to interact with:
+- browsers
+- files
+- databases
+- APIs
+- GitHub
+
+2. Without MCP, AI only suggests code. With MCP, AI can execute code and perform real 
+actions using external tools.
+
+3. Faster Development Cycles
+
+AI can:
+- generate code
+- execute automation
+- debug failures
+- fix issues autonomously
+
+This improves productivity and reduces manual effort.
+
+Limitations:
+------------
+
+1. Depends on Tool Support
+
+MCP alone cannot perform actions without integrated tools or MCP servers.
+
+Examples:
+- Playwright MCP
+- GitHub MCP
+- Filesystem MCP
+
+2. Hallucination and Errors
+
+MCP workflows depend heavily on prompt quality.
+
+Bad prompts may lead to:
+- poor code generation
+- incorrect execution
+- unstable automation
+- hallucinations
+
+3. Token-Based Usage
+
+Large contexts and complex workflows consume more tokens, making execution slower and
+more expensive.
+
+Using MCP with agents:
+----------------------
+
+- Planner Agent → plans the test flow
+- Generator Agent → generates automation code
+- Healer Agent → analyzes failures and fixes issues
+
+This architecture enables autonomous AI-assisted automation workflows.
+
+Prerequisites:
+--------------
+
+ Node.js (v18+ recommended) and npm installed.
+ A terminal and (optionally) VS Code.
+ Basic familiarity with terminal commands.
+ Project folder created (e.g., leaftaps-playwright).
+
+>> Add the below code in playwright config file to Adds Node.js type support in the file 
+so TypeScript can recognize Node features like process, path, and __dirname.
+
+/// <reference types="node" />
+
+
+Steps to initialize MCP server and agents:
+------------------------------------------
+
+Step 1 — Initialize Playwright project
+Run the Playwright initializer (includes example prompts):
+npm init playwright@latest
+Follow prompts (choose TypeScript if asked). 
+This creates a Playwright project scaffold.
+
+Step 2 — Install Playwright Test (latest)
+npm install -D @playwright/test@latest
+Confirm package.json has @playwright/test in devDependencies.
+
+**Note:** If you use `npm init playwright@latest`, you do **not** need to run `npm 
+install -D @playwright/test@latest` immediately afterward because it is already 
+installed.
+
+If you simply want to upgrade to the latest version later, then run:
+
+npm install -D @playwright/test@latest
+
+Verify Installation:
+--------------------
+
+Open `package.json` and confirm:
+
+"devDependencies": {
+  "@playwright/test": "^latest-version"
+}
+
+
+Step 3 — Initialize the agents
+In the project root run (choose the client you will use). 
+Example for VS Code loop:
+
+npx playwright init-agents --loop=vscode
+
+The above command leads to .vscode folder creation with mcp.json file in it.
+
+After this, inspect what was added. Look for:
+.github/chatmodes/ # or similar folder
+├─ planner/ # prompts & config for Planner
+├─ generator/ # prompts & config for Generator
+└─ healer/ # prompts & config for Healer
+These contain prompts and agent definitions (Planner, Generator, Healer).
+
+
+Step 4: Prompt in Planner Agent :
+---------------------------------
+
+BaseURL :
+https://leaftaps.com/opentaps/control/main
+
+Use the below credentials to login :
+Username : democsr2
+Password : crmsfa
+
+Scenario:
+1. Login to the application.
+2. Navigate to CRM/SFA.
+3. Navigate to Create Lead.
+4. Create a new lead.
+5. Validate that the lead was created successfully.
+
+Create a detailed Playwright test plan with:
+- Preconditions
+- Test steps
+- Expected results
+- Suggested locators
+- Assertions
+
+Create a new lead in a below page :
+https://leaftaps.com/opentaps/control/createLeadForm
+
+------------------------------------------------------------------
+
+Step 5: Prompt for Generate Agent :
+-----------------------------------
+
+(Note : Attach the planner file to the agent before running this prompt.)
+
+You are a Playwright test code generator.
+Generate a Playwright test code to create a new lead in the leaftaps application using 
+the attched planner file.
+
+
+  * Page Object Model
+  * Test file
+  * Locators
+  * Assertions
+  * Best Playwright practices
+
+
+
+ Step 6 – Review and Execute
+
+Run:
+
+npx playwright test
+
+
+Step 7 – Use the Healer Agent
+
+If there are failures:
+
+* Switch to the **Healer Agent**
+* Attach the failing test and error output
+* Ask it to fix the issue while preserving the test intent
+
+
+Prompt in Healer Agent :
+-----------------------
+(Note : Attach the planner file to the agent before running this prompt.)
+
+If any test is failing, analyze the failure reason and provide steps to fix it.
+Provide the fixed code snippet only without any explanation.
+
+
+Q] What are the differences between Copilot and MCP + AI?
+
+| Feature              | Copilot | MCP + AI |
+| -------------------- | ------- | -------- |
+| Code suggestion      | Yes     | Yes      |
+| Browser automation   | Limited | Yes      |
+| Tool execution       | Limited | Yes      |
+| File operations      | Limited | Yes      |
+| Multi-agent workflow | No      | Yes      |
+| Autonomous execution | Partial | Strong   |
+
+
+
