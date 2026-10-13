@@ -1,0 +1,188 @@
+📑 Agenda for Week7 Day2: Allure Report and Introduction to API
+
+
+Allure Report
+
+Introduction to API
+
+ServiceNow API integration with Postman
+Introduction to ServiceNow APIs
+Connecting ServiceNow with Postman
+Sending API requests
+Handling authentication
+Validating API responses
+
+Breakout
+Hands-on practice with ServiceNow API integration
+
+
+
+Allure Report:
+--------------
+
+Allure Report is a test reporting framework used to generate interactive and detailed HTML reports 
+for automation test execution.
+
+Commands for Allure Reports:
+---------------------------
+Step1 :
+
+Add the below command in playwright configuration file to make below changes:
+reporter: [['html'], ['allure-playwright']],
+
+Step2 :
+
+Run the plugin in the root directory and execute below commands in the terminal :
+
+1. npm i -D allure-playwright
+
+2. npm i -g allure-commandline --save-dev
+
+3. Execute the tests:
+   npx playwright test fileName.spec.ts
+
+4. allure serve
+
+
+API:
+
+1. Introduction to REST API  
+* Overview of REST architecture and principles.
+
+2. Headers  
+* Understanding HTTP headers and their significance in API requests.  
+
+3. Verbs (POST, PUT, GET, DELETE, PATCH)  
+* Explanation of HTTP methods and their use cases.  
+
+4. Request Body & Response Body  
+* Understanding the structure and purpose of request and response payloads.  
+
+5. Authorization Types  
+* Overview of different authorization methods (e.g., Basic Auth, OAuth2).
+
+6. Create record in Salesforce
+* Practical exercise- Working on creating a Lead using POST and retrieve using GET requests. 
+
+
+API → Application Programming Interface
+----------------------------------------
+
+An API (Application Programming Interface) is a mechanism that allows two software systems or 
+applications to communicate and exchange data.
+
+API Testing verifies the backend functionality by directly sending requests to APIs and 
+validating. API testing can be performed without interacting with the UI.
+
+Request
+Response
+Status code
+Response body
+Headers
+Authentication
+Data
+Business logic
+
+
+
+REST → Representational State Transfer
+---------------------------------------
+
+REST is an architectural style used for designing web services.
+REST APIs commonly use standard HTTP methods to perform CRUD operations.
+
+UI -> Customer facing interface
+API -> Middle ware 
+
+Five Steps process for API testing
+------------------------------------
+
+1. Documentation
+: Understanding the API's purpose, structure, and usempId guidelines before testing.
+Example: 
+: Reading Swagger docs that describe how the incident API works in an application.
+
+2. Endpoints: 
+: Specific URLs that represent resources or actions to be tested.
+Example: 
+:https://hostname/services/oauth2/token
+
+3. Methods: 
+: HTTP operations (GET, POST, PATCH, PUT, DELETE, etc.) that define the type of action on the 
+resource.
+Example: 
+: GET /incident → fetch incidents; POST /incident → create a new incident.
+
+4. Headers: 
+: Metadata sent with requests or responses to control and describe API behavior.
+Example: 
+Content-Type: application/json, Accept: application/json.
+
+5. Authorization: 
+: Security mechanism to verify and allow only valid users or systems to access the API.
+Example: 
+Authorization: Bearer <token> or Basic Auth with username & password.
+
+Service Now
+-----------
+
+ServiceNow is an IT Service Management (ITSM) tool — it helps companies handle things like:
+
+Reporting IT issues (e.g., “system issue”)
+Requesting new hardware/software
+Tracking incidents, changes, and problems
+Automating workflows across departments
+
+It's like a one-stop system for all service requests within a company — IT, HR, facilities, 
+finance, etc.
+
+Login to ServiceNow -Developer link:
+------------------------------------
+
+https://developer.servicenow.com/dev.do
+gauthami.vn@testleaf.com
+Jasjeevan@2025
+
+Service instance , username and password :
+------------------------------------------
+
+Instance URL:
+
+https://dev330545.service-now.com
+
+Username: admin
+Password: TkA5z3JBzp//
+
+
+Steps to generate an OAuth token:
+---------------------------------
+
+1. Log in to your ServiceNow instance with an account that has the required administrative 
+permissions. 
+
+2. Click All → System OAuth → Application Registry → New
+
+3. Then choose Create an OAuth API endpoint for external clients
+->enter Name ex: Demo and change scope restriction to Broadly scoped->submit
+
+4. ServiceNow documents this as the setup for inbound OAuth clients.
+now select the oAuth name Demo->you should be able to see client id and client secret
+
+Client ID: f24f2e3ebc904f95abb57764f9f7d886
+
+Client Secret: Ww{T^)GX+&LrYwk9b+:@Jg+!n{5#RT(L
+ 
+
+Endpoint to generate the token:
+-------------------------------
+
+POST https://<servicenow_base_url>/oauth_token.do
+
+ex:
+
+https://dev330545.service-now.com/oauth_token.do
+
+
+
+
+
