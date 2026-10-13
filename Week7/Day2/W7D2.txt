@@ -183,6 +183,14 @@ ex:
 https://dev330545.service-now.com/oauth_token.do
 
 
+Body:
+
+grant_type:password
+client_id:f24f2e3ebc904f95abb57764f9f7d886
+client_secret:Ww{T^)GX+&LrYwk9b+:@Jg+!n{5#RT(L
+username:admin
+password:TkA5z3JBzp//
+
 
 
 
