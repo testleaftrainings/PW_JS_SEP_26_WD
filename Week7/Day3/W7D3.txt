@@ -1,0 +1,176 @@
+
+📑 Agenda for Week7 Day3: Service Now integration with Postman
+
+
+ServiceNow API integration with Postman
+Introduction to ServiceNow APIs
+Connecting ServiceNow with Postman
+Sending API requests
+Handling authentication
+Validating API responses
+
+
+Login to ServiceNow -Developer link:
+------------------------------------
+
+https://developer.servicenow.com/dev.do
+gauthami.vn@testleaf.com
+Jasjeevan@2025
+
+Service instance , username and password :
+------------------------------------------
+
+Instance URL:
+
+https://dev330545.service-now.com
+
+Username: admin
+Password: TkA5z3JBzp//
+
+
+Steps to generate an OAuth token:
+---------------------------------
+
+1. Log in to your ServiceNow instance with an account that has the required administrative 
+permissions. 
+
+2. Click All → System OAuth → Application Registry → New
+
+3. Then choose Create an OAuth API endpoint for external clients
+->enter Name ex: Demo and change scope restriction to Broadly scoped->submit
+
+4. ServiceNow documents this as the setup for inbound OAuth clients.
+now select the oAuth name Demo->you should be able to see client id and client secret
+
+Client ID: f24f2e3ebc904f95abb57764f9f7d886
+
+Client Secret: Ww{T^)GX+&LrYwk9b+:@Jg+!n{5#RT(L
+ 
+
+Endpoint to generate the token:
+-------------------------------
+
+POST https://<servicenow_base_url>/oauth_token.do
+
+ex:
+
+https://dev330545.service-now.com/oauth_token.do
+
+
+Body:
+
+grant_type:password
+client_id:f24f2e3ebc904f95abb57764f9f7d886
+client_secret:Ww{T^)GX+&LrYwk9b+:@Jg+!n{5#RT(L
+username:admin
+password:TkA5z3JBzp//
+
+
+
+Request Payload :
+----------------
+
+{
+  "short_description": "Email not working",
+  "description": "User cannot send or receive emails",
+  "comments": "Updated via POSTMAN",
+  "work_notes": "Checked mail server logs",
+  "subcategory": "Email",
+  "impact": "2",
+  "urgency": "2"
+}
+
+
+>>Service Now Navigation to Create Incidents using UI interface and API Interface within servicenow:
+
+--> UI => All -> Type Incident  (in Filter text box) --> Choose Incident from Service Desk
+--> REST API => All-> REST API Explorer--> Choose Create a record POST--> Choose tableName= Incident
+ and Under Request Body --> Choose Short Description and fill a short description.
+
+
+Classroom:
+---------
+
+Create a new Change Request in ServiceNow using the REST API and Postman, then perform all four CRUD operations: Create, Read, Update, and Delete.
+We will use the ServiceNow Table API with the change_request table
+
+Instance URL:
+-------------
+
+https://dev330545.service-now.com
+
+Username: admin
+Password: TkA5z3JBzp//
+
+Endpoint to generate the token:
+-------------------------------
+
+https://dev330545.service-now.com/oauth_token.do
+
+
+Authorization:
+--------------
+Bearer Token
+
+
+Headers:
+--------
+
+application/json
+
+
+Request Payload :
+----------------
+
+{
+  "short_description": "Email not working",
+  "description": "User cannot send or receive emails",
+  "comments": "Updated via POSTMAN",
+  "work_notes": "Checked mail server logs",
+  "subcategory": "Email",
+  "impact": "2",
+  "urgency": "2"
+}
+
+
+
+
+
+Different types of variable setting in API testing (Postman):
+------------------------------------------------------------
+
+1) Global Variables
+
+Used across all collections and environments.
+Example: Token, common URL.
+
+
+2) Environment Variables
+
+Used for specific environments like Dev, QA, Prod.
+Example: Sys_ID, base_url, username.
+
+let responseBody = pm.response.json();
+console.log(responseBody)
+
+let Sn_sysid=responseBody.result.sys_id
+console.log(Sn_sysid)
+
+pm.environment.set("Snow_sysId",Sn_sysid)
+
+EX: {{Snow_sysId}}
+
+3) Collection Variables
+
+Available only inside one collection.
+Used for shared values within that API project.
+
+let responseBody = pm.response.json();
+console.log(responseBody)
+
+let Sn_acctoken=responseBody.access_token
+console.log(Sn_acctoken)
+
+pm.collectionVariables.set("Snow_AccessToken",Sn_acctoken)
+
+EX: {{Snow_AccessToken}}
