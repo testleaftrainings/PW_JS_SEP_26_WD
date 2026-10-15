@@ -1,0 +1,273 @@
+📑 Agenda for Week7 Day4: Salesforce integration with Postman and playwright
+
+
+Salesforce integration with Postman
+Breakout
+API Integration with Playwright
+Salesforce API Integration
+ 
+
+Five Steps process for API testing
+------------------------------------
+
+1. Documentation
+: Understanding the API's purpose, structure, and usage guidelines before testing.
+Example: 
+: Reading Swagger docs that describe how the incident API works in an application.
+
+2. Endpoints: 
+: Specific URLs that represent resources or actions to be tested.
+Example: 
+:https://hostname/services/oauth2/token
+
+3. Methods: 
+: HTTP operations (GET, POST, PATCH, PUT, DELETE, etc.) that define the type of action on the 
+resource.
+Example: 
+: GET /incident → fetch incidents; POST /incident → create a new incident.
+
+4. Headers: 
+: Metadata sent with requests or responses to control and describe API behavior.
+Example: 
+Content-Type: application/json, Accept: application/json.
+
+5. Authorization: 
+: Security mechanism to verify and allow only valid users or systems to access the API.
+Example: 
+Authorization: Bearer <token> or Basic Auth with username & password.
+
+Together, these 5 steps ensure your API test covers what, where, how, and who can access the service.
+********************************************************************************************
+OAuth 2.0 (Open Authorization) is an authorization framework where an Authorization Server 
+generates access tokens to allow clients to securely access protected resources.
+
+HTTP Methods:
+-------------
+
+1) Generate Access Token
+Authenticate user and receive access token.
+
+2) Use Token in Authorization
+Pass token as Bearer token in request header.
+
+3) Create Resource
+Use POST method to create new record.
+
+4) Get Resource
+Use GET method to fetch existing record.
+
+5) Update Resource
+Use PATCH/PUT method to modify record.
+
+6) Delete Resource
+Use DELETE method to remove record.
+
+
+1) Steps to get the endpoint for oAuth token/generate access token:
+------------------------------------------------------------------
+
+Google->Salesforce OAuth endpoints->https://hostname/services/oauth2/token
+or 
+https://help.salesforce.com/s/articleView?languempId=en_US&id=xcloud.remoteaccess_oauth_endpoints.htm&type=5
+
+
+endpoint:  https://hostname/services/oauth2/token
+replace the hostname based on the environment  (Production / Developer)
+hostname=login.salesforce.com  (older one)
+hostname=orgfarm-6d28dcc693-dev-ed.develop.my.salesforce.com(mydomain name in UI-new one)
+
+
+2) Steps to get the endpoint from salesforce documentation for CRUD operations:
+
+https://developer.salesforce.com/docs/atlas.en-us.api_rest.meta/api_rest/intro_curl.htm 
+
+or
+
+Google->Salesforce Rest API with cURL->Introduction to Rest API-> Headers->Send Rest request with intro_curl->
+curl https://MyDomainName.my.salesforce.com/services/data/v68.0/sobjects/Lead
+
+replace below domain name in the endpoint
+MyDomainName(https://MyDomainName.my.salesforce.com) = https://orgfarm-6d28dcc693-dev-ed.develop.my.salesforce.com
+
+Final Endpoint= https://orgfarm-6d28dcc693-dev-ed.develop.my.salesforce.com/services/data/v65.0/sobjects/Lead
+
+
+
+--------------------------------------
+Steps to find the field in salesforce :
+----------------------------------------
+
+From Salesforce Setup (Recommended)
+
+Log in to your Salesforce Developer Org.
+
+Go to Setup → Object Manager.
+
+Search for and click on Lead.
+
+Open Fields & Relationships.
+
+You will see a list of all the fields available on the Lead object.
+
+The Field Label is what you see in the UI (e.g., “Last Name”).
+
+The Field Name is what you use in the API (e.g., LastName, Company).
+
+These “Field Names” are what you should use in your JSON request body.
+
+or 
+
+path:
+-----
+login to salesforce application->settings->setup->ObjectManager->Lead->FieldsAndRelationships->view
+
+Example:
+
+{
+
+  "LastName": "VN",
+  "Company": "Testleaf",
+  "Email": "gauthami.vn@testleaf.com",
+  "Phone": "8789765426"
+}
+
+
+Classroom:
+----------
+
+Salesforce API CRUD using Postman -Create Account 
+end point for access token :https://hostname/services/oauth2/token
+end point for CRUD operations: https://MyDomainName.my.salesforce.com/services/data/v65.0/sobjects/Account
+
+
+Playwright with API:
+--------------------
+
+Request fixture:  Built-in fixture used for API testing in Playwright. It provides request context 
+to send HTTP requests and validate responses inside Playwright test cases.
+
+we can get the context information without launching the browser.
+
+APIRequestContext: used to create an isolated API session for sending HTTP requests directly to 
+backend services. It helps us perform API testing, create test data, validate responses, handle 
+authentication, and combine API testing with UI automation workflows without opening browser.
+
+
+Browser-context:
+----------------
+
+ /* test('launch browser,async()=>{
+ const browser=await chromium.launch({channel:"msedge"})
+ const context=await browser.newContext()
+ const page= await context.newPage()
+ }) 
+ 
+ replacing with page fixture
+ test('launch browser,async({page})=>{
+ })
+ */
+
+ Request fixture: API
+ --------------------
+
+ import { request } from '@playwright/test';
+
+ test('create request', async () => {
+
+    const apiContext = await request.newContext();
+
+    const response = await apiContext.get(
+        "https://api.example.com/users"
+    );
+
+});
+
+
+request.newContext()
+          |
+          ↓
+APIRequestContext
+          |
+          ↓
+GET / POST / PUT / PATCH / DELETE
+
+
+Using Playwright Built-in request Fixture
+-----------------------------------------------
+
+    test('create request ', async({request})=>{
+
+         const response = await request.get("https://api.example.com/users");
+
+    }) */
+
+
+
+
+====================================================================================================================
+1. Salesforce API integration with Playwright:
+
+Step 1:
+-------
+
+Salesforce document to get endpoint to generate access token:
+------------------------------------------------------------
+
+endpoint:https://login.salesforce.com/services/oauth2/token
+
+headers:{
+Content-Type": "application/x-www-form-urlencoded"
+//Used to send login details as key=value form data.
+},
+
+form:{
+grant_type:password
+client_id:3MVG9rZjd7MXFdLhTFd7jYNtTiu5DzDqdNCte5DvFnv7tbIspjQ9CGPizYGUq7h6T69VSmfqxT9yY2NS7tz84
+client_secret:09FE1EF4BDD93B17821073243A441F8A780A639C21D925B575C1112A3F5E0DBE
+username:gauthami.vn@testleaf.com
+password:Qeagle@123
+}
+
+
+Step 2:
+
+create Lead
+===========
+
+endpoint: https://orgfarm-6d28dcc693-dev-ed.develop.my.salesforce.com/services/data/v65.0/sobjects/Lead
+
+header:{
+Content-Type,
+Authorization
+}
+data:{
+}
+
+
+step 3: 
+
+Capture response ID and store globally to use it for next steps like fetch, update, delete, and UI 
+verification.
+
+step 4:
+
+Login to Salesforce UI.
+Search created Lead using Lead ID or Name.
+Use assertion to verify the status and status text.
+
+
+
+Classroom Activity:
+-------------------
+
+Write a Playwright API script to perform CRUD operations for Salesforce Account.
+
+===================================================================================================
+
+
+Week 7: Sep 26 weekday evening batch
+
+Feedback form:
+
+https://forms.cloud.microsoft/r/2jWbRtUWUm
+
