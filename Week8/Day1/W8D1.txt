@@ -1,0 +1,218 @@
+📑 Agenda for Week8 Day1: Jira intergration with Postman
+
+
+Service Now with PW API
+Intorduction to Jira application
+Create Jira request(task or bug) in Postman
+
+
+ServiceNow API integration with playwright:
+------------------------------------------
+
+
+Developer login to get the Instance URL and login credentials:
+
+https://dev330545.service-now.com
+
+Username: admin
+Password: TkA5z3JBzp//
+
+
+Client ID: f24f2e3ebc904f95abb57764f9f7d886
+
+Client Secret: Ww{T^)GX+&LrYwk9b+:@Jg+!n{5#RT(L
+
+Create request(post):
+---------------------
+
+http methods to use request fixture Ex: let response=await request.post()
+end point:https://dev400508.service-now.com/api/now/table/incident
+header+authentication
+data(body)
+
+
+syntax:
+-------
+
+test('create incident',async({request})=>{
+
+// serialization-converting object to json
+
+let response= await request.post('endpoint',
+
+{
+
+headers:
+{
+"Content-Type":"application/json",
+"Authorization":"Basic Auth" (can be encryt using inbuil method)
+},
+
+data:
+{
+"description":"Playwright with API"
+}
+})
+
+/* get the response and use assertions to verify it */
+
+let resbody=await response.json()   //json to object (Deserialization)
+
+})
+
+Classroom 1: 
+-----------
+
+Create Change Request using Playwright API CRUD for ServiceNow
+
+endpoint :https://dev400508.service-now.com/api/now/table/change_request
+endpoint for token generation: https://dev330545.service-now.com/oauth_token.do
+
+https://dev330545.service-now.com
+
+Username: admin
+Password: TkA5z3JBzp//
+
+Client ID: f24f2e3ebc904f95abb57764f9f7d886
+
+Client Secret: Ww{T^)GX+&LrYwk9b+:@Jg+!n{5#RT(L
+
+Note:
+steps to verify change request in SNow->All->change->All->navigate to change request.
+
+
+Jira is Project Management & Issue Tracking tool to organize work, track bugs,and manage projects 
+in a team to track their work.
+
+Project Management-helps teams plan and organize work
+Issue Tracking tool-helps track tasks, bugs, and problems
+
+
+Jira integration
+----------------
+Documentation
+Endpoint
+Auth
+http methods
+body
+response body/status codes
+
+
+Request fixture and Axios:
+--------------------------
+
+1) We use Playwright request fixture for UI tied API's
+2) We use axios http library for independent API like Jira
+
+Playwright->Request fixture can not interact with third party libraries,so need to install axios
+axios: common api for all api calls
+
+installation command:
+npm install axios
+
+Jira credentials
+----------------
+gauthami.vn@testleaf.com
+Qeagle@2026
+
+token:
+ATATT3xFfGF09dcNDx-RrcE2Y7n_mM3LkVLC4iu0n4c5qN9bzTgkJf2BN8WZYVbsGH7C3mFwE-6cCZb2YCoeZOvAXCv3RFGc1ZmTOX-cI_WRmaDu4hH8VC5Q0qtebwAmatSA69GZ40uiDb3nSpZ-1MqqOcc-JbU_-FNHvK4p9P3ddMXjTCsTufU=0BFC072D
+
+
+Steps to create Jira Account
+----------------------------
+
+1) goto website https://www.atlassian.com/software/jira
+2) click on 'Get it free' under Jira s/w
+3) you will be directed to Atlassian's sign-up page
+4) click on 'Sign up'
+5) Check your email inbox for a verification link from Atlassian and click on it
+6) Set a strong password for your Atlassian account.
+7) Once logged in, you will land on the JIRA dashboard where you can start creating projects.
+
+Steps to Create a Jira Project
+--------------------------------
+Go to Projects and select Create project.
+Select the Scrum template.
+Choose Use template.
+Select Team-managed project.
+Enter the project name.
+Example: PW_SepWD
+Click Next.
+In “Bring your team along”, click Skip.
+The project will be created successfully.
+Verify that the newly created project is listed under the Projects tab.
+
+
+steps to generate API Token
+---------------------------
+
+Jira API Token Creation – Steps
+Click on your Profile.
+Select Account Settings.
+Click the Security tab.
+Scroll down and select Create and manage API tokens.
+Verify your email address by entering the OTP.
+Click Create API token.
+Enter the token name:
+Jira-API-Token
+Set the token expiry date.
+Example: 12/27/26.
+Click Create.
+Copy the generated API token immediately and store it securely for future use.
+Click Done.
+
+
+How to take endpoint
+--------------------
+
+Generic endpoint: https://<your-domain>.atlassian.net/rest/api/2/issue
+
+
+1) From your Jira account url https://testleaf-team-ppdcho09.atlassian.net/jira/software/projects/PJN/list
+slice till "https://testleaf-team-ppdcho09.atlassian.net"
+
+2) From your swagger documentation, 
+https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/#api-rest-api-3-issue-post
+
+select Post(create issue)-POST  /rest/api/3/issue
+
+
+So Endpoint: "https://testleaf-team-ppdcho09.atlassian.net/rest/api/3/issue"   
+             "https://testleaf-team-ppdcho09.atlassian.net/rest/api/2/issue"  (use older version for stability)
+
+
+Home Assignment:
+----------------
+
+
+1) endpoint for postman:
+https://gauthamshara.atlassian.net/rest/api/2/issue
+
+2) Authorization:
+username: gautham.vn@testleaf.com
+Password:ATATT3xFfGF09dcNDx-RrcE2Y7n_mM3LkVLC4iu0n4c5qN9bzTgkJf2BN8WZYVbsGH7C3mFwE-6cCZb2YCoeZOvAXCv3RFGc1ZmTOX-cI_WRmaDu4hH8VC5Q0qtebwAmatSA69GZ40uiDb3nSpZ-1MqqOcc-JbU_-FNHvK4p9P3ddMXjTCsTufU=0BFC072D
+
+3) Header
+Content-Type: application/json
+
+4) body( json)
+
+{
+"fields": {
+    "project": {
+        "key": "PM"
+    },
+    "summary": "Bug created through Postman",
+    "description": "Page is not loaded",
+     "issuetype": {
+      "name": "Bug"
+    }
+
+
+}
+}
+
+5) Perform all crud operations using postman
+create, get, put and delete
+
