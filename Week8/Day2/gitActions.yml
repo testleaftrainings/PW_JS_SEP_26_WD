@@ -1,0 +1,152 @@
+# 📘 GitHub Repository Workflow Guide
+
+## 1. Creating a New Repository from Command Line
+
+
+# Create README file
+echo "# github-actions-novwd" >> README.md
+
+# Initialize local repository
+git init
+
+# Commit the README
+git commit -m "first commit"
+
+# Rename branch to main
+git branch -M main
+
+# Add remote GitHub repo
+git remote add origin https://github.com/gauthami89/github-actions-aug.git
+
+# Stage all files and commit
+git add .
+git commit -m "Initial commit"
+
+# Push changes to GitHub
+git push -u origin main
+
+
+---
+
+## 2. Cloning or Pulling Files from GitHub
+
+###  First time (clone entire repo)
+
+
+git clone https://github.com/gauthami90/github-actions-aug.git
+cd github-actions-aug
+
+
+### Already cloned (get latest changes)
+
+
+git pull origin main
+
+
+###  Pull only one specific file (less common)
+
+
+git fetch origin main
+git checkout origin/main -- tests/01-launchBrowser.spec.ts
+
+
+---
+
+## 3. Pushing Files to GitHub
+
+### Push a single file
+
+git add tests/filename.spec.ts
+git commit -m "Add test for filename"
+git push origin main
+
+### Push multiple specific files
+
+git add tests/filename1.spec.ts tests/filename2.spec.ts
+git commit -m "Update tests filename1 and filename2"
+git push origin main
+
+### Push all changes in a specific folder
+
+git add tests/
+git commit -m "Commit all changes inside tests folder"
+git push origin main
+
+
+###  Push everything inside `tests/` but not other files
+
+(same as above)
+
+git add tests/
+git commit -m "Commit all changes inside tests folder"
+git push origin main
+
+---
+
+## 4. Typical Update Workflow
+
+If you edited a file in VS Code (example: `03-page-fixture.spec.ts`):
+
+# Step 1: Stage the file
+git add tests/03-page-fixture.spec.ts
+
+# Step 2: Commit changes
+git commit -m "Update test to log page title in 03-page-fixture.spec.ts"
+
+# Step 3: Push to GitHub
+git push origin main
+
+---
+
+✅ **Tips:**
+
+* Always run `git status` to check staged/unstaged changes.
+* Use meaningful commit messages.
+* Use `git pull origin main` before pushing to avoid conflicts.
+
+
+-----------------------------------------------------------------
+
+Note:
+-----
+
+U — Untracked
+
+Means:
+
+This file is new and Git is not tracking it yet.
+
+It exists on your computer, but Git does not know about it.
+
+Example:
+
+01-playwrightlocators.spec.ts   U
+NotesWeek2Day3.yml             U
+
+
+These files were created but not added to Git yet.
+To track them:
+git add <filename>
+
+or
+
+git add .
+M — Modified
+
+Means:
+
+This file was already in Git, but you changed it after the last commit.
+
+Git is tracking it, but your latest changes are not committed yet.
+
+To save the change:
+
+git add <file>
+git commit -m "Update something"
+
+
+summary 
+-------
+
+U = New file not yet in Git
+M = Existing file changed after last commit

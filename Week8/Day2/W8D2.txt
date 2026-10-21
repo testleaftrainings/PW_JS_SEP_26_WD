@@ -1,0 +1,124 @@
+📑 Agenda for Week8 Day2: Jira intergration with PW API and GitHub Actions
+
+Create Jira request using PW- API
+Breakout
+Introduction to GitHub Actions
+Understanding Workflows and YAML Structure
+Creating First Workflow File
+Running Playwright Tests using GitHub Actions
+Viewing Results and Logs in GitHub
+Breakout Session
+
+
+Jira integration
+----------------
+Documentation
+Endpoint
+Auth
+http methods
+body
+response body/status codes
+
+
+Request fixture and Axios:
+--------------------------
+
+1) We use Playwright request fixture for UI tied API's
+2) We use axios http library for independent API like Jira
+
+Playwright->Request fixture can not interact with third party libraries,so need to install axios
+axios: common api for all api calls
+
+installation command:
+npm install axios
+
+Jira credentials
+----------------
+gauthami.vn@testleaf.com
+Qeagle@2026
+
+token:
+ATATT3xFfGF09dcNDx-RrcE2Y7n_mM3LkVLC4iu0n4c5qN9bzTgkJf2BN8WZYVbsGH7C3mFwE-6cCZb2YCoeZOvAXCv3RFGc1ZmTOX-cI_WRmaDu4hH8VC5Q0qtebwAmatSA69GZ40uiDb3nSpZ-1MqqOcc-JbU_-FNHvK4p9P3ddMXjTCsTufU=0BFC072D
+
+
+Classroom Activity:
+===================
+
+create, get, put and delete request for Jira application using Playwright API.
+
+
+GitHub Actions(CI/CD for Playwright):
+------------------------------------
+
+
+What is CI/CD and why automation needs it
+Understanding GitHub Actions workflow
+Running Playwright tests on every
+
+* Code push
+* Pull request
+
+Key concepts:
+
+* YAML workflow
+* Runners
+* Artifacts (test reports, screenshots)
+
+Real-world pipeline:
+--------------------
+
+Developer → GitHub → Automated Tests → Report → Team
+
+
+
+Steps to Push code to GitHub:
+-----------------------------
+
+1) Install gitBash and setup your login credentials
+
+2) Check the version of gitBash using `git --version`
+
+3) Integrate git login with vscode terminal using `git config --global user.name "Your Name"`and
+ `git config --global user.email "Your Email"`
+
+4) Enable gitHub copilot chat in VScode for better code suggestions and assistance
+
+5) Create a new repository on GitHub and copy the repository URL
+
+6) Create new workspace and install PW using command "npm init playwright@latest" in the terminal
+add this "/// <reference types="node" />" in the test file to avoid any errors related to node types
+
+7) Open gitBash terminal in the project folder and run the following commands to push code to GitHub:
+
+//initialize Git local repository
+git init
+
+//set the default branch name to main
+git branch -M main
+
+//add the remote repository URL
+git remote add origin "<REPOSITORY_URL>"
+
+//stage all files for commit
+git add . 
+git add tests/example.spec.ts tests/test-1.spec.ts
+
+//commit the staged files with a message
+git commit -m "first commit"
+
+//push the committed changes to the remote repository on GitHub
+git push -u origin main
+
+//goto GitHub and verify the code is pushed successfully (by refresh)
+
+//click on the "Actions" tab in the GitHub repository to view the workflow runs and logs for the 
+Playwright test
+
+//click on summary and then click on the "Artifacts" section to download the test report and 
+screenshots for further analysis and debugging if needed
+
+ 8) To pull the latest changes from GitHub, use the following command in the terminal:
+ git pull origin main
+
+9) To pull only a specific file from GitHub, use the following commands:
+  git fetch origin main
