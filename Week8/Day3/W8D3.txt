@@ -1,0 +1,694 @@
+📑 Agenda for Week8 Day3: Playwright features
+
+
+Recap GitHub Actions
+Breakout Session
+Device Emulation
+Visual Regression testing
+Geolocation Testing
+
+
+
+Device Emulation:
+simulating a real mobile/tablet device behavior inside the browser without having the actual device.
+ex:mobile, tablet, desktop
+
+
+Visual Regression Testing:
+Compare webpage screenshots to detect visual changes and useful for ensuring UI consistency across
+all updates
+
+
+Geolocation Testing:
+Simulating different user locations (latitude and longitude) to verify location-based 
+application behavior.
+
+usage:
+Validate location-specific content ex: local news, weather, or events
+Verify maps, nearby services, delivery availability Ex: food delivery, ride-sharing
+
+
+WHAT IS DEVICE EMULATION?
+--------------------------------------------------------------------------------
+Device Emulation is a Playwright feature that allows a desktop browser to
+simulate the behavior of a real mobile or tablet browser without requiring a
+physical device.
+
+Playwright changes several browser characteristics so that the application
+behaves as if it is being accessed from an actual mobile device.
+
+DEFINITION:
+  Device Emulation is the process of simulating a mobile or tablet browser by
+  configuring browser properties such as viewport, user agent, touch capability,
+  and device scale factor.
+
+WHY DEVICE EMULATION?
+--------------------------------------------------------------------------------
+Modern web applications must support multiple devices.
+
+Example:
+  Desktop, Laptop, Tablet, Android Phone, iPhone
+
+Instead of purchasing every device, Playwright provides predefined device
+configurations.
+
+WHAT CHANGES DURING DEVICE EMULATION?
+--------------------------------------------------------------------------------
+When we write:
+
+import { devices } from '@playwright/test'
+
+test.use({
+    ...devices['iPhone 15 Pro']
+})
+
+Playwright automatically configures:
+  • Viewport Size
+  • User Agent
+  • Device Scale Factor
+  • Touch Support
+  • Mobile Mode
+  • Default Browser
+
+Internally it applies a DeviceDescriptor.
+
+WHAT IS DEVICE DESCRIPTOR?
+--------------------------------------------------------------------------------
+DeviceDescriptor is a TypeScript type that defines the properties of a mobile
+device.
+
+type DeviceDescriptor = {
+    viewport: ViewportSize;
+    userAgent: string;
+    deviceScaleFactor: number;
+    isMobile: boolean;
+    hasTouch: boolean;
+    defaultBrowserType: 'chromium' | 'firefox' | 'webkit';
+}
+
+Every predefined device follows this structure.
+
+WHAT IS devices?
+--------------------------------------------------------------------------------
+Many developers think devices is an interface or a class.
+
+It is NEITHER.
+
+It is simply an exported object that contains predefined device configurations.
+
+Conceptually:
+const devices = {
+    "iPhone 15": {...},
+    "Pixel 7": {...},
+    "Galaxy S24": {...}
+}
+
+Each value is a DeviceDescriptor.
+
+HOW TO SEE ALL SUPPORTED DEVICES?
+--------------------------------------------------------------------------------
+import { devices } from '@playwright/test'
+console.log(Object.keys(devices))
+
+Example Output:
+  iPhone 15
+  iPhone 15 Pro
+  Pixel 7
+  Galaxy S24
+  iPad Pro
+  ...
+
+CREATING A CUSTOM DEVICE:
+--------------------------------------------------------------------------------
+Playwright does NOT allow adding new devices into the built-in devices
+collection.
+
+Instead, create your own configuration.
+
+const galaxyA55 = {
+    viewport: { width: 412, height: 915 },
+    userAgent: "Mozilla/5.0 ...",
+    deviceScaleFactor: 2.6,
+    isMobile: true,
+    hasTouch: true,
+    defaultBrowserType: 'chromium'
+}
+
+Usage:
+test.use({ ...galaxyA55 })
+
+INTERNAL WORKING:
+--------------------------------------------------------------------------------
+Playwright
+      │
+      ▼
+Device Descriptor
+      │
+      ▼
+Browser Context
+      │
+      ▼
+Viewport → User Agent → Touch → Scale Factor → Mobile Mode
+
+REAL-TIME USE CASES:
+--------------------------------------------------------------------------------
+Banking Applications:
+  Verify mobile banking pages (ICICI, HDFC, Axis)
+
+Ecommerce:
+  Amazon, Flipkart, Myntra
+  Verify responsive UI, product listing, mobile checkout
+
+Healthcare:
+  Patient Portal, Doctor Portal, Hospital Dashboard
+  Verify responsive layout on mobile
+
+CRM:
+  Salesforce, ServiceNow, Zoho CRM
+  Verify mobile navigation, drawer menu, responsive dashboard
+
+DEVICE EMULATION vs APPIUM:
+--------------------------------------------------------------------------------
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Playwright                    │ Appium                                      │
+├───────────────────────────────┼─────────────────────────────────────────────┤
+│ Browser Automation            │ Native App Automation                       │
+│ Mobile Website                │ Native Android/iOS App                     │
+│ Emulated Device               │ Real Device                                 │
+│ No APK Required               │ APK/IPA Required                            │
+└───────────────────────────────┴─────────────────────────────────────────────┘
+
+LIMITATIONS:
+--------------------------------------------------------------------------------
+Playwright cannot automate:
+  ❌ Native Android Apps
+  ❌ Native iOS Apps
+  ❌ Camera
+  ❌ Contacts
+  ❌ Phone App
+  ❌ WhatsApp
+
+Playwright only automates browsers.
+
+BEST PRACTICES:
+--------------------------------------------------------------------------------
+  ✅ Prefer predefined devices whenever possible
+  ✅ Create custom devices only when required
+  ✅ Use test.use() for project-wide emulation
+  ✅ Use browser.newContext() when only a single test requires a different
+     device
+
+COMMON MISTAKES:
+--------------------------------------------------------------------------------
+❌ Thinking Device Emulation changes only viewport.
+
+Actually it changes:
+  • Viewport
+  • User Agent
+  • Mobile Mode
+  • Touch
+  • Scale Factor
+
+❌ Thinking Device Emulation uses a real phone.
+
+No. Everything still runs on your desktop browser.
+
+INTERVIEW QUESTIONS:
+--------------------------------------------------------------------------------
+Q1: What is Device Emulation?
+  Device Emulation simulates a mobile or tablet browser by configuring browser
+  properties such as viewport, user agent, touch support, and device scale
+  factor.
+
+Q2: What is devices?
+  devices is an exported object containing predefined DeviceDescriptor
+  configurations.
+
+Q3: Can we create our own device?
+  Yes. Create a custom object matching the DeviceDescriptor structure.
+
+Q4: Can Playwright replace Appium?
+  No. Playwright automates web browsers. Appium automates native mobile
+  applications.
+
+Q5: Does Device Emulation run on a real phone?
+  No. It emulates device characteristics inside a desktop browser.
+
+KEY TAKEAWAYS:
+--------------------------------------------------------------------------------
+  • Device Emulation simulates mobile browsers.
+  • devices is an object, not an interface.
+  • Every predefined device is a DeviceDescriptor.
+  • Playwright cannot automate native mobile applications.
+  • Custom devices can be created by defining a DeviceDescriptor.
+
+
+WHAT IS GEOLOCATION?
+--------------------------------------------------------------------------------
+Geolocation is a Playwright feature that allows us to mock the browser's GPS
+coordinates.
+
+The browser behaves as if it is physically located at the specified latitude and
+longitude.
+
+Example:
+test.use({
+    geolocation: {
+        latitude: 13.0827,
+        longitude: 80.2707
+    },
+    permissions: ['geolocation']
+})
+
+WHY GEOLOCATION?
+--------------------------------------------------------------------------------
+Many modern applications display different information depending on the user's
+location.
+
+Examples:
+  • Uber
+  • Ola
+  • Swiggy
+  • Zomato
+  • Google Maps
+  • Weather
+  • Store Locator
+  • Banking
+  • Healthcare
+
+HOW DOES PLAYWRIGHT MOCK LOCATION?
+--------------------------------------------------------------------------------
+Playwright overrides navigator.geolocation.getCurrentPosition() instead of
+changing your computer's actual GPS.
+
+Architecture:
+Application
+      │
+navigator.geolocation()
+      │
+      ▼
+Playwright
+      │
+Returns Mock Coordinates
+      │
+      ▼
+Application receives mocked GPS
+
+WHY IS permissions REQUIRED?
+--------------------------------------------------------------------------------
+Browsers require user permission before exposing GPS information.
+
+Without permissions: ['geolocation'], the browser blocks the request.
+
+WHY GOOGLE MAPS SHOWED THE SAME LOCATION?
+--------------------------------------------------------------------------------
+This is one of the biggest misconceptions.
+
+Google Maps does NOT rely only on browser geolocation.
+
+It also considers:
+  • Public IP
+  • Google Account
+  • Cookies
+  • Search History
+  • Server-side Location Detection
+
+Architecture:
+Google Maps
+      │
+Browser GPS → Public IP → Cookies → Account → History
+      │
+      ▼
+Final Location
+
+Therefore, changing only geolocation may not produce different search results.
+
+HOW TO VERIFY GEOLOCATION?
+--------------------------------------------------------------------------------
+Instead of Google Maps, use:
+  • https://my-location.org
+
+or
+
+navigator.geolocation.getCurrentPosition()
+
+Example:
+const location = await page.evaluate(() => {
+    return new Promise(resolve => {
+        navigator.geolocation.getCurrentPosition(position => {
+            resolve({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            })
+        })
+    })
+})
+
+This confirms that Playwright is returning the mocked coordinates.
+
+REAL-TIME USE CASES:
+--------------------------------------------------------------------------------
+Food Delivery:
+  Verify nearby restaurants.
+
+Ride Booking:
+  Verify nearby drivers.
+
+Store Locator:
+  Nearest branch, ATM, Pharmacy.
+
+Weather:
+  Verify temperature, forecast, humidity based on mocked location.
+
+Healthcare:
+  Nearby hospitals, blood banks, medical shops.
+
+Travel:
+  Nearby hotels, tourist attractions, restaurants.
+
+DATA-DRIVEN GEOLOCATION:
+--------------------------------------------------------------------------------
+const locations = [
+    { name: "Chennai", latitude: 13.08, longitude: 80.27 },
+    { name: "Delhi", latitude: 28.61, longitude: 77.20 }
+]
+
+Each iteration verifies a different location.
+
+BROWSER LOCATION vs IP LOCATION:
+--------------------------------------------------------------------------------
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Browser Geolocation        │ IP Location                                   │
+├────────────────────────────┼───────────────────────────────────────────────┤
+│ Controlled by Playwright   │ Determined by ISP/Proxy                      │
+│ Mockable                   │ Not changed by geolocation                    │
+│ Uses navigator.geolocation │ Uses Public IP                                │
+└────────────────────────────┴───────────────────────────────────────────────┘
+
+LIMITATIONS:
+--------------------------------------------------------------------------------
+Playwright changes:
+  ✅ Browser GPS
+
+Playwright does NOT change:
+  ❌ Public IP
+  ❌ VPN
+  ❌ ISP Location
+  ❌ Server-side Location Detection
+
+BEST PRACTICES:
+--------------------------------------------------------------------------------
+  ✅ Always grant geolocation permission
+  ✅ Verify mocked coordinates using navigator.geolocation
+  ✅ Use demo sites like my-location.org for learning
+  ✅ Understand that enterprise applications may combine GPS with IP-based
+     location
+
+COMMON MISTAKES:
+--------------------------------------------------------------------------------
+❌ Assuming Google Maps will always change location.
+
+Reality: Google Maps also considers IP, cookies, account data, and server-side
+logic.
+
+❌ Forgetting to grant geolocation permission.
+
+Without permission, the browser denies location access.
+
+INTERVIEW QUESTIONS:
+--------------------------------------------------------------------------------
+Q1: What is Geolocation?
+  Geolocation allows Playwright to mock the browser's GPS coordinates so
+  applications receive simulated latitude and longitude values.
+
+Q2: Why is permissions: ['geolocation'] required?
+  Because browsers block access to GPS information unless permission is granted.
+
+Q3: Why did Google Maps show the same hospitals even after changing latitude
+    and longitude?
+  Google Maps uses multiple location signals such as browser GPS, public IP,
+  cookies, Google account, and server-side logic. Mocking browser geolocation
+  alone does not guarantee different search results.
+
+Q4: How can you verify that Playwright is mocking location correctly?
+  Use navigator.geolocation.getCurrentPosition() or a demo site like
+  my-location.org to verify the mocked latitude and longitude.
+
+Q5: Does Playwright change your computer's actual GPS?
+  No. It only overrides the browser's Geolocation API.
+
+KEY TAKEAWAYS:
+--------------------------------------------------------------------------------
+  • Geolocation mocks the browser's GPS coordinates.
+  • Always grant geolocation permission.
+  • Use my-location.org to verify mocked coordinates.
+  • Browser geolocation and IP location are different concepts.
+  • Enterprise applications often combine multiple location sources, so browser
+    GPS alone may not determine application behavior.
+
+
+ 3. VISUAL REGRESSION TESTING
+================================================================================
+
+WHAT IS VISUAL REGRESSION TESTING?
+--------------------------------------------------------------------------------
+Visual Regression Testing is the process of comparing the current UI screenshot
+with a previously approved baseline screenshot to identify any unexpected
+visual changes.
+
+Unlike functional testing, which verifies behavior, Visual Regression Testing
+ensures that the UI appearance remains unchanged.
+
+DEFINITION:
+  Visual Regression Testing verifies the visual consistency of an application
+  by comparing screenshots taken during test execution against baseline images.
+
+WHY VISUAL REGRESSION TESTING?
+--------------------------------------------------------------------------------
+Functional tests may pass even when the UI is broken.
+
+Example:
+Expected:
++-------------------+
+|   Login Button    |
++-------------------+
+
+Developer changes CSS:
++-------------------+
+|        Login      |
+|        Button     |
++-------------------+
+
+All functional tests still pass because the button exists.
+But from a user perspective, the UI is broken.
+
+Visual Regression Testing catches these problems.
+
+WHAT PROBLEMS CAN IT DETECT?
+--------------------------------------------------------------------------------
+  • Button Alignment
+  • Font Changes
+  • Color Changes
+  • Missing Icons
+  • Broken Images
+  • Layout Changes
+  • CSS Issues
+  • Responsive Problems
+  • Spacing Issues
+
+HOW DOES PLAYWRIGHT PERFORM VISUAL TESTING?
+--------------------------------------------------------------------------------
+Playwright automatically captures a screenshot and compares it with a stored
+baseline image.
+
+Architecture:
+Application → Current Screenshot → Baseline Screenshot → Pixel Comparison → PASS/FAIL
+
+SCREENSHOT LIFECYCLE:
+--------------------------------------------------------------------------------
+First Execution:
+  await expect(page).toHaveScreenshot();
+
+  No Baseline → Capture Screenshot → Save Baseline
+
+  Example file structure:
+  tests/
+    login.spec.ts
+    login.spec.ts-snapshots/
+      Login Page-chromium-win32.png
+
+Second Execution:
+  Current Screenshot → Baseline Screenshot → Pixel Comparison → PASS/FAIL
+
+  If differences exist, Playwright generates:
+    expected.png
+    actual.png
+    diff.png
+
+SCREENSHOT vs VISUAL REGRESSION:
+--------------------------------------------------------------------------------
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ Screenshot                     │ Visual Regression                         │
+├────────────────────────────────┼────────────────────────────────────────────┤
+│ Captures image                 │ Captures + Compares                       │
+│ Used for reporting             │ Used for automated verification           │
+│ Never fails because UI changed │ Fails when UI changes                    │
+│ page.screenshot()              │ expect().toHaveScreenshot()               │
+└────────────────────────────────┴────────────────────────────────────────────┘
+
+PAGE SCREENSHOT:
+--------------------------------------------------------------------------------
+await page.screenshot({ path: 'home.png' })
+
+Purpose: Debugging, Documentation, Reports
+
+VISUAL REGRESSION:
+--------------------------------------------------------------------------------
+await expect(page).toHaveScreenshot();
+
+Purpose: UI validation
+
+LOCATOR LEVEL SCREENSHOT:
+--------------------------------------------------------------------------------
+Instead of comparing the entire page:
+
+await expect(page.locator('#loginForm')).toHaveScreenshot();
+
+Only Login Form gets compared.
+
+Recommended in enterprise applications.
+
+WHY NOT COMPARE THE ENTIRE PAGE?
+--------------------------------------------------------------------------------
+Large applications contain:
+  • Advertisements
+  • Current Time
+  • Notifications
+  • Live Charts
+  • Maps
+  • Random IDs
+
+These change every execution.
+
+Result: False Failures.
+
+DYNAMIC UI CHALLENGES:
+--------------------------------------------------------------------------------
+Dashboard contains:
+  • Current Time
+  • Advertisement
+  • Weather Widget
+
+Next day:
+  • Advertisement Changed
+  • Time Changed
+
+Visual test fails even though application is working correctly.
+
+SOLUTION 1 - MASK DYNAMIC ELEMENTS (★★★★★ Recommended)
+--------------------------------------------------------------------------------
+Mask hides unstable UI during comparison.
+
+await expect(page).toHaveScreenshot({
+    mask: [
+        page.locator('.advertisement'),
+        page.locator('.clock')
+    ]
+})
+
+Playwright replaces masked regions with solid color before comparison.
+
+SOLUTION 2 - STYLE INJECTION (★★★★★ Recommended)
+--------------------------------------------------------------------------------
+Temporarily hide elements only while taking the screenshot.
+
+await expect(page).toHaveScreenshot({
+    style: `
+        .advertisement {
+            visibility: hidden !important;
+        }
+    `
+})
+
+Useful for: Ads, Notifications, Popups
+
+SOLUTION 3 - BLOCK ADVERTISEMENT REQUESTS (★★★★★ Recommended)
+--------------------------------------------------------------------------------
+Enterprise preferred approach.
+
+await page.route('**/*doubleclick.net/**', route => route.abort())
+
+Ads never load. Visual testing becomes stable.
+
+SOLUTION 4 - PIXEL THRESHOLD
+--------------------------------------------------------------------------------
+Sometimes browser rendering differs by few pixels.
+
+await expect(page).toHaveScreenshot({
+    maxDiffPixelRatio: 0.01
+})
+
+OR
+
+await expect(page).toHaveScreenshot({
+    maxDiffPixels: 100
+})
+
+REAL-TIME USE CASES:
+--------------------------------------------------------------------------------
+Banking:
+  Dashboard, Transfer Screen, Cards, Loan Section
+
+Ecommerce:
+  Product Details, Checkout, Cart, Offers
+
+Healthcare:
+  Patient Dashboard, Doctor Dashboard, Reports
+
+CRM:
+  Salesforce, ServiceNow, Zoho
+  Lead Page, Account Page, Opportunity Page
+
+ENTERPRISE BEST PRACTICES:
+--------------------------------------------------------------------------------
+  ✅ Compare stable components instead of the entire page
+  ✅ Block third-party advertisements
+  ✅ Mask dynamic UI
+  ✅ Store baseline images in Git
+  ✅ Execute visual tests in same OS
+  ✅ Execute visual tests using same browser version
+
+COMMON MISTAKES:
+--------------------------------------------------------------------------------
+❌ Using page.screenshot() instead of expect(page).toHaveScreenshot()
+
+❌ Comparing pages containing Ads, Current Time, Maps, Animations without masking
+
+❌ Running visual tests on different operating systems (rendering differs)
+
+INTERVIEW QUESTIONS:
+--------------------------------------------------------------------------------
+Q1: Difference between Screenshot and Visual Regression?
+  Screenshot only captures. Visual Regression captures and compares.
+
+Q2: Why do Visual Tests fail even when application works?
+  Dynamic UI: Advertisements, Time, Maps, Notifications
+
+Q3: What is baseline image?
+  The approved reference screenshot used for future comparison.
+
+Q4: What is masking?
+  Mask hides unstable regions during screenshot comparison.
+
+Q5: Why is Locator Screenshot preferred?
+  Smaller comparison area, faster, more stable, less false failures.
+
+KEY TAKEAWAYS:
+--------------------------------------------------------------------------------
+  • Visual Regression validates UI appearance.
+  • Baseline images are automatically created.
+  • toHaveScreenshot() performs comparison.
+  • page.screenshot() only captures.
+  • Dynamic UI should be masked or blocked.
+  • Locator-level comparison is recommended.
+
