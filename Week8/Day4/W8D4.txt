@@ -1,0 +1,196 @@
+📑 Agenda for Week8 Day4: End to end framework
+
+Persistent Context
+Network interception
+Basic understanding of Playwright Hybrid Framework:
+Framework Walkthrough
+Page Object Model (POM) Implementation
+Test Structure and Organization 
+Test Execution and Reporting
+Best Practices and Tips for Playwright Hybrid Framework
+
+
+Persistent context:
+--------------------
+
+1. Persistent Context
+
+Persistent Context saves browser data in a user profile directory and reuses it across browser launches.
+
+Use cases:
+
+Manual login and debugging.
+Retaining cookies, local storage, and browser preferences.
+Testing applications that require interactive authentication.
+
+create user context:
+--------------------
+
+const context = await chromium.launchPersistentContext(
+  './myDataDir',
+  { headless: false }
+);
+
+Reuse it using custom fixture:
+------------------------------
+//custom fix
+
+import { test as base, chromium } from '@playwright/test';
+
+export const test = base.extend({
+    context: async ({}, use) => {
+        const context = await chromium.launchPersistentContext(
+            './myDataDir',
+            { headless: false }
+        );
+
+        await use(context);
+        await context.close();
+    }
+    })
+
+//use it
+
+import { test } from '../fixtures/customFixture';
+
+test('Dashboard test', async ({ context }) => {
+    const page = context.pages()[0] || await context.newPage();
+
+    await page.goto('https://www.leafground.com/');
+
+    // Continue testing
+});
+
+
+Note: Avoid running parallel tests using the same profile directory.
+
+2. Storage State
+
+Storage State saves authentication information in a JSON file and loads it into new browser contexts.
+
+Use cases:
+Reusing login sessions across multiple spec files.
+Regression and smoke testing.
+CI/CD execution using Jenkins or GitHub Actions.
+Parallel testing with isolated browser contexts.
+
+Configure it in playwright.config.ts:
+
+import { defineConfig } from '@playwright/test';
+
+export default defineConfig({
+  use: {
+    storageState: 'auth.json'
+  }
+});
+
+Generate auth.json after a successful login using a setup test.
+Note: Keep auth.json out of Git because it may contain sensitive authentication data.
+
+3. Difference  between Persistent Context and storageState
+
+Feature	              Persistent Context	                      Storage State
+
+Data storage	        Browser profile folder	                   JSON file (auth.json)
+Reuse login	          Yes	                                       Yes
+Browser preferences	  Retained	                                 Not retained
+CI/CD suitability	    Less suitable	                             Recommended
+Parallel execution	  Avoid sharing the same profile directory	 Use isolated browser contexts
+
+4. Recommendation
+
+Use Persistent Context for local testing, interactive login, and debugging.
+Use Storage State for reusable authentication in a professional Playwright framework and CI/CD pipeline.
+
+Note: Neither approach guarantees permanent login. Authentication may expire based on the application's
+ session policy.
+
+
+Network interception:
+---------------------
+
+Network interception in Playwright means capturing and controlling network requests and responses
+ between the browser and the server.
+
+It allows us to modify, block, mock, or monitor API requests without changing the application code.
+
+
+Important Playwright methods:
+-----------------------------
+
+Method	                Purpose
+
+page.route()	          Intercept and control matching requests
+route.fulfill()	        Return a mocked response
+route.continue()	      Send the request to the actual server
+route.abort()	          Block the request
+page.on('request')	    Monitor outgoing requests
+page.on('response')	    Monitor server responses
+page.waitForResponse()	Wait for a specific response
+
+Diff between Network interception and  API testing:
+-----------------------
+
+Network interception	                                API testing
+
+Controls requests made by the browser	                Sends requests directly to the API
+Commonly used to mock backend behavior	              Commonly used to validate actual API behavior
+Tests UI behavior under different network conditions	Tests status codes, response bodies, headers,and business logic
+
+
+Framework Walkthrough:
+----------------------
+
+This agenda is designed to provide a comprehensive overview of the Playwright Hybrid Framework
+covering its key components and best practices for effective test automation. 
+
+
+Folder structure:
+-----------------
+
+data-> hold all the data files
+utility-> wrapper methods under helpers folder ex: api, ui, fixtures
+page -> classes
+test->for executing the test cases
+reports-> to have timestamp and html report
+
+Dependencies/libraries:
+-----------------------
+
+PW installation/configuration 
+npm init playwright@latest
+
+node version
+npm -v
+
+typescript config file
+tsconfig.json -> tsc --init
+
+Data parameterization:
+----------------------
+
+csv-> npm install csv-parser
+env->npm install dotenv
+axios-> npm insall axios
+faker-> npm install @faker-js/faker
+excel-> npm install xlsx
+path-> npm install path
+fs-> npm install fs
+
+
+steps to run the framework:
+---------------------------
+
+1) Import the framework
+
+2) install node modules by running command "npm install" from root directory.
+
+
+
+Week 8: Sep 26 weekday evening batch
+Feedback form:
+
+https://forms.cloud.microsoft/r/nA0vpkcmfU
+
+
+
